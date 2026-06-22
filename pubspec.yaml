@@ -1,0 +1,51 @@
+name: reel_generator
+description: "A professional Flutter application for creating, tracking, and previewing marketing reels featuring AI script generation, voice clone, avatar placeholder, and vendor-influencer tracking dashboards."
+version: 1.0.0+1
+
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Localization & Icons
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # State Management & Services
+  flutter_riverpod: ^2.5.1
+  get_it: ^7.7.0
+
+  # Firebase Core & Feature SDKs
+  firebase_core: ^3.1.0
+  firebase_auth: ^5.1.0
+  cloud_firestore: ^5.0.1
+  firebase_storage: ^12.0.1
+
+  # Native & Hardware
+  file_picker: ^8.0.0
+  image_picker: ^1.1.0
+  permission_handler: ^11.3.1
+  video_player: ^2.8.5
+
+  # UI Presentation
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.3.1
+  fl_chart: ^0.68.0
+  percent_indicator: ^4.2.3
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/videos/

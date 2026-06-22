@@ -1,0 +1,6 @@
+{
+  "name": "REELGEN AI",
+  "description": "Create. Promote. Track. Grow. An ultra-premium AI Content Creation, Influencer Sponsorship, and Photoshoot Studio platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
