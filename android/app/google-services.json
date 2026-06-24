@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "851061710789",
+    "project_id": "reelgen-ai-6ec95",
+    "storage_bucket": "reelgen-ai-6ec95.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851061710789:android:b2375d2da8bf1b1a6535ac",
+        "android_client_info": {
+          "package_name": "com.example.reel_generator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmzJo1o9QcKms7OxYt3cSt9zS1Av2C234"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
