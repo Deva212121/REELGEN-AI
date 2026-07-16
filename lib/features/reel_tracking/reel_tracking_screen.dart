@@ -12,7 +12,7 @@ class ReelTrackingScreen extends StatelessWidget {
         children: [
           const Text(
             'Reel Social Metrics Monitor',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 4),
           const Text(
@@ -61,7 +61,7 @@ class ReelTrackingScreen extends StatelessWidget {
         children: [
           const Text('ORGANIC VIEWERSHIP GROWTH', style: TextStyle(color: Color(0xFFD0BCFF), fontSize: 11, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          const Text('57,940 Total Views', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.black)),
+          const Text('57,940 Total Views', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w900)),
           const SizedBox(height: 4),
           const Text('+12.4% Organic traffic boost this week', style: TextStyle(color: Color(0xFFC4FF62), fontSize: 11, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
@@ -137,7 +137,7 @@ class ReelTrackingScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Retentive Audience Loopback:', style: TextStyle(color: Color(0xFF938F99), fontSize: 10)),
               Text('${(retention * 100).toInt()}% Completion', style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),

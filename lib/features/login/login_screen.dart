@@ -10,43 +10,48 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController(text: 'influencer@reelgen.ai');
+  final _emailController = TextEditingController(text: 'divya@reelgen.ai');
   final _passwordController = TextEditingController(text: 'password123');
-  String _selectedRole = 'INFLUENCER';
+  final _mobileController = TextEditingController(text: '8657472021');
+  String _selectedRole = 'VENDOR';
   bool _isLoading = false;
 
-  void _handleEmailLogin() async {
-    if (_emailController.text.trim().isEmpty) {
+  final List<Map<String, String>> _roles = [
+    {'value': 'INFLUENCER', 'label': 'Creator'},
+    {'value': 'VENDOR', 'label': 'Merchant'},
+    {'value': 'ADMIN', 'label': 'Auditor'},
+    {'value': 'SUPER_ADMIN', 'label': 'Super Admin'},
+    {'value': 'SUB_ADMIN', 'label': 'Sub Admin'},
+  ];
+
+  final FirebaseService _firebaseService = FirebaseService();
+
+  Future<void> _directLogin() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid email address.')),
+        const SnackBar(content: Text('Please fill email and password')),
       );
       return;
     }
-    setState(() => _isLoading = true);
-    final service = FirebaseService();
-    // Simulate real auth
-    await service.login(_emailController.text, _passwordController.text, _selectedRole);
-    setState(() => _isLoading = false);
-    _navigateToRoleSelection();
-  }
 
-  void _handleGoogleLogin() async {
     setState(() => _isLoading = true);
-    final service = FirebaseService();
-    await service.loginWithGoogle(_selectedRole);
-    setState(() => _isLoading = false);
-    _navigateToRoleSelection();
-  }
 
-  void _navigateToRoleSelection() {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const RoleSelectionScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-      ),
-    );
+    try {
+      await _firebaseService.login(email, password, _selectedRole);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const RoleSelectionScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -68,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Logo Circle Area
                   Center(
                     child: Container(
                       width: 90,
@@ -80,27 +84,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFD0BCFF).withOpacity(0.4),
+                            color: const Color(0xFFD0BCFF).withAlpha((0.4 * 255).round()),
                             blurRadius: 18,
                             spreadRadius: 2,
                           )
                         ],
                       ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        size: 45,
-                        color: Colors.white,
-                      ),
+                      child: const Icon(Icons.auto_awesome, size: 45, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Title and Taglines
                   const Text(
-                    'REELGEN AI',
+                    'SelloreAI',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 32,
-                      fontWeight: FontWeight.black,
+                      fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 2,
                     ),
@@ -117,7 +116,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // Credentials Container Card with Glassmorphic visual look
                   Container(
                     padding: const EdgeInsets.all(24.0),
                     decoration: BoxDecoration(
@@ -137,12 +135,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Email Input
                         TextField(
                           controller: _emailController,
                           style: const TextStyle(color: Colors.white, fontSize: 14),
                           decoration: InputDecoration(
-                            labelText: 'Developer/User Email',
+                            labelText: 'Email',
                             labelStyle: const TextStyle(color: Color(0xFF938F99)),
                             prefixIcon: const Icon(Icons.email, color: Color(0xFFD0BCFF)),
                             filled: true,
@@ -158,13 +155,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Password Input
                         TextField(
                           controller: _passwordController,
                           obscureText: true,
                           style: const TextStyle(color: Colors.white, fontSize: 14),
                           decoration: InputDecoration(
-                            labelText: 'Access Password',
+                            labelText: 'Password',
                             labelStyle: const TextStyle(color: Color(0xFF938F99)),
                             prefixIcon: const Icon(Icons.lock, color: Color(0xFFD0BCFF)),
                             filled: true,
@@ -179,34 +175,76 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _mobileController,
+                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            labelText: 'Mobile Number (10 digits)',
+                            labelStyle: const TextStyle(color: Color(0xFF938F99)),
+                            prefixIcon: const Icon(Icons.phone, color: Color(0xFFD0BCFF)),
+                            filled: true,
+                            fillColor: const Color(0x1BFFFFFF),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Color(0xFF49454F)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Color(0xFFD0BCFF)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 20),
-                        // Assigning Initial Workplace Role Option in Login screen as requested
                         const Text(
                           'Primary Work Space Context',
                           style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            _buildRoleOption('INFLUENCER', 'Creator'),
-                            _buildRoleOption('VENDOR', 'Merchant'),
-                            _buildRoleOption('ADMIN', 'Auditor'),
-                          ],
+                        DropdownButtonFormField<String>(
+                          value: _selectedRole,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color(0x1BFFFFFF),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Color(0xFF49454F)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(color: Color(0xFFD0BCFF)),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          ),
+                          dropdownColor: const Color(0xFF2B2930),
+                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFD0BCFF)),
+                          items: _roles.map((role) {
+                            return DropdownMenuItem<String>(
+                              value: role['value'],
+                              child: Text(role['label']!),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedRole = value!;
+                            });
+                          },
                         ),
                         const SizedBox(height: 24),
-                        // Sign-In Button Trigger
                         _isLoading
                             ? const Center(child: CircularProgressIndicator(color: Color(0xFFD0BCFF)))
                             : ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFFC4FF62),
                                   foregroundColor: Colors.black,
-                                  shape: RoundedCornerShape(12),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   padding: const EdgeInsets.symmetric(vertical: 14),
                                 ),
-                                onPressed: _handleEmailLogin,
+                                onPressed: _directLogin,
                                 child: const Text(
-                                  'SIGN IN AS SELECTOR',
+                                  'SIGN IN',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                                 ),
                               ),
@@ -214,25 +252,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Social Google sign-in support
-                  Row(
+                  const Row(
                     children: [
-                      const Expanded(child: Divider(color: Color(0xFF49454F))),
-                      const Padding(
+                      Expanded(child: Divider(color: Color(0xFF49454F))),
+                      Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text('OR SOCIAL FEDERATION', style: TextStyle(color: Color(0xFF938F99), fontSize: 10)),
                       ),
-                      const Expanded(child: Divider(color: Color(0xFF49454F))),
+                      Expanded(child: Divider(color: Color(0xFF49454F))),
                     ],
                   ),
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
-                    onPressed: _isLoading ? null : _handleGoogleLogin,
+                    onPressed: _isLoading ? null : () {},
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
                       side: const BorderSide(color: Color(0xFF49454F), width: 1.5),
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedCornerShape(12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     icon: const Icon(Icons.g_mobiledata, size: 28, color: Color(0xFFC4FF62)),
                     label: const Text('AUTHENTICATE WITH GOOGLE', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
@@ -245,41 +282,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  Widget _buildRoleOption(String roleVal, String label) {
-    final isSelected = _selectedRole == roleVal;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedRole = roleVal;
-          });
-        },
-        child: Container(
-          margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF381E72) : const Color(0x0DFFFFFF),
-            border: Border.all(
-              color: isSelected ? const Color(0xFFD0BCFF) : const Color(0xFF49454F),
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected ? Colors.white : const Color(0xFF938F99),
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }
-
-// Helper curve constructor
-RoundedCornerShape(double radius) => RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));

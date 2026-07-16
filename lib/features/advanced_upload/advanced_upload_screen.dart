@@ -145,11 +145,11 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.between,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'BROWSE HIGH-RES ASSET POOL',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.black, fontSize: 13),
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close, color: Colors.white38),
@@ -194,7 +194,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
                               style: const TextStyle(color: Colors.white38, fontSize: 10),
                             ),
                             trailing: isAlreadyAdded
-                                ? const Text('ADDED', style: TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontWeight: FontWeight.black))
+                                ? const Text('ADDED', style: TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontWeight: FontWeight.w900))
                                 : ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFF381E72),
@@ -294,8 +294,8 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
       builder: (context) {
         return AlertDialog(
           backgroundColor: const Color(0xFF1F1B2C),
-          title: Row(
-            children: const [
+          title: const Row(
+            children: [
               Icon(Icons.gavel, color: Colors.orangeAccent),
               SizedBox(width: 8),
               Text('Legal Disclaimer Required', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
@@ -469,7 +469,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
-            fontWeight: FontWeight.black,
+            fontWeight: FontWeight.w900,
             letterSpacing: 1.0,
           ),
         ),
@@ -481,9 +481,9 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFC4FF62).withOpacity(0.08),
+        color: const Color(0xFFC4FF62).withAlpha((0.08 * 255).round()),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFC4FF62).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFC4FF62).withAlpha((0.3 * 255).round())),
       ),
       child: Row(
         children: [
@@ -493,10 +493,10 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
             child: const Icon(Icons.drive_folder_upload, color: Colors.black, size: 20),
           ),
           const SizedBox(width: 14),
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text('ADVANCED STUDIO MEDIA UPLOADER', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
                 Text('Support camera assets, studio captures, multi-file reordering, and copyright checks.', style: TextStyle(color: Colors.white70, fontSize: 10)),
               ],
@@ -511,10 +511,10 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: _disclaimerAccepted ? const Color(0x13FFFFFF) : Colors.redAccent.withOpacity(0.08),
+        color: _disclaimerAccepted ? const Color(0x13FFFFFF) : Colors.redAccent.withAlpha((0.08 * 255).round()),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _disclaimerAccepted ? const Color(0xFF49454F) : Colors.redAccent.withOpacity(0.4),
+          color: _disclaimerAccepted ? const Color(0xFF49454F) : Colors.redAccent.withAlpha((0.4 * 255).round()),
           width: 1.2,
         ),
       ),
@@ -531,7 +531,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
               const SizedBox(width: 8),
               const Text(
                 'MANDATORY COPYRIGHT STIPULATION',
-                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.black, letterSpacing: 0.5),
+                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.5),
               ),
             ],
           ),
@@ -539,7 +539,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
           const Text(
             '"I confirm that I own this content or have permission to use it. I am responsible for any copyright or legal issue."',
             style: TextStyle(
-              color: Colors.white80,
+              color: Colors.white70,
               fontSize: 11,
               fontStyle: FontStyle.italic,
               height: 1.4,
@@ -621,9 +621,9 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
       decoration: BoxDecoration(
         color: const Color(0xFF130F26),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFD0BCFF).withOpacity(0.5), width: 1.5),
+        border: Border.all(color: const Color(0xFFD0BCFF).withAlpha((0.5 * 255).round()), width: 1.5),
       ),
-      overflow: BoxOverflow.hidden,
+      clipBehavior: Clip.hardEdge,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -692,7 +692,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
                     left: 10,
                     right: 10,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.between,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Simulated MP4 Player node: ${viewItem.name}', style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
                         const Text('0:15 / 1:30', style: TextStyle(color: Colors.white54, fontSize: 9)),
@@ -717,13 +717,13 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [Colors.black80, Colors.transparent],
+                    colors: [Colors.black87, Colors.transparent],
                   ),
                 ),
                 padding: const EdgeInsets.all(10),
                 alignment: Alignment.bottomLeft,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.between,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: Text(
@@ -900,8 +900,8 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.edit_note, color: Color(0xFFD0BCFF), size: 14),
               SizedBox(width: 6),
               Text(
@@ -1151,11 +1151,11 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.save_as, color: Color(0xFFC4FF62), size: 16),
               SizedBox(width: 8),
-              Text('Save Campaign Draft', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+              Text('Save Campaign Draft', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900)),
             ],
           ),
           const SizedBox(height: 12),
@@ -1184,7 +1184,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
             icon: const Icon(Icons.cloud_done),
             label: const Text(
               'SYNC & SAVE ENTIRE CAMPAIGN',
-              style: TextStyle(fontWeight: FontWeight.black, fontSize: 11, letterSpacing: 0.5),
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11, letterSpacing: 0.5),
             ),
           ),
         ],
@@ -1229,7 +1229,7 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
@@ -1277,10 +1277,10 @@ class _AdvancedUploadScreenState extends State<AdvancedUploadScreen> with Single
               const SizedBox(height: 12),
 
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.verified, color: Color(0xFFC4FF62), size: 12),
                       SizedBox(width: 4),
                       Text('Copyright stipulations sealed', style: TextStyle(color: Colors.white54, fontSize: 9)),

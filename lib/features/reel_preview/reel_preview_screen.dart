@@ -15,8 +15,7 @@ class _ReelPreviewScreenState extends State<ReelPreviewScreen> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        maxHeight: 520,
-        maxWidth: 320,
+        constraints: const BoxConstraints(maxHeight: 520, maxWidth: 320),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: const Color(0xFF49454F), width: 2),
@@ -26,7 +25,7 @@ class _ReelPreviewScreenState extends State<ReelPreviewScreen> {
             colors: [Color(0xFF381E72), Color(0xFF0F0A1E)],
           ),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 18, spreadRadius: 2)
+            BoxShadow(color: Colors.black.withAlpha((0.5 * 255).round()), blurRadius: 18, spreadRadius: 2)
           ],
         ),
         child: ClipRRect(
@@ -40,7 +39,7 @@ class _ReelPreviewScreenState extends State<ReelPreviewScreen> {
                 children: [
                   const Icon(Icons.slow_motion_video, size: 60, color: Color(0xFFC4FF62)),
                   const SizedBox(height: 10),
-                  const Text('REELGEN AI SCREENPLAY PLAYER', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black, letterSpacing: 1)),
+                  const Text('REELGEN AI SCREENPLAY PLAYER', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900, letterSpacing: 1)),
                   const SizedBox(height: 4),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -113,7 +112,7 @@ class _ReelPreviewScreenState extends State<ReelPreviewScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(color: const Color(0xFFC4FF62), borderRadius: BorderRadius.circular(4)),
-                          child: const Text('JOINED', style: TextStyle(color: Colors.black, fontSize: 7, fontWeight: FontWeight.black)),
+                          child: const Text('JOINED', style: TextStyle(color: Colors.black, fontSize: 7, fontWeight: FontWeight.w900)),
                         )
                       ],
                     ),
@@ -128,9 +127,9 @@ class _ReelPreviewScreenState extends State<ReelPreviewScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(color: const Color(0x33FFFFFF), borderRadius: BorderRadius.circular(8)),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(Icons.audiotrack, size: 10, color: Color(0xFFD0BCFF)),
                           SizedBox(width: 6),
                           Text('Original Audio Cloned V1 - ReelGen AI', style: TextStyle(color: Color(0xFFD0BCFF), fontSize: 9)),

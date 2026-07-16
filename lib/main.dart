@@ -1,36 +1,57 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
 import 'services/firebase_service.dart';
 import 'features/login/login_screen.dart';
-import 'features/role_selection/role_selection_screen.dart';
 import 'features/influencer_dashboard/influencer_dashboard_screen.dart';
 import 'features/vendor_dashboard/vendor_dashboard_screen.dart';
 import 'features/admin_dashboard/admin_dashboard_screen.dart';
-import 'features/ai_script_generator/script_generator_screen.dart';
-import 'features/voice_upload/voice_upload_screen.dart';
-import 'features/image_to_video/image_to_video_screen.dart';
-import 'features/photoshoot_studio/photoshoot_studio_screen.dart';
+import 'features/super_admin_dashboard/super_admin_dashboard_screen.dart';
+import 'features/sub_admin_dashboard/sub_admin_dashboard_screen.dart';
+import 'features/profile/profile_screen.dart';
+import 'features/ai_script_generator/sellore_ai_screen.dart';
 import 'features/product_selection/product_selection_screen.dart';
 import 'features/product_promotion_otp/otp_verification_screen.dart';
 import 'features/influencer_business_tracking/business_tracking_screen.dart';
 import 'features/reel_tracking/reel_tracking_screen.dart';
 import 'features/reel_preview/reel_preview_screen.dart';
-import 'features/avatar_clone/avatar_clone_screen.dart';
 import 'features/parcel_tracking/parcel_tracking_screen.dart';
 import 'features/sound_library/sound_library_screen.dart';
-import 'features/advanced_upload/advanced_upload_screen.dart';
+import 'features/customer_order/customer_order_screen.dart';
+import 'features/notifications/notification_screen.dart';
+import 'features/search/search_screen.dart';
 
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
-  runApp(const ReelGeneratorApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    if (kDebugMode) {
+      print('Crashlytics: ${errorDetails.exception}');
+    }
+  };
+
+  if (!kDebugMode) {
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+  }
+
+  runApp(const ReelGenApp());
 }
 
-class ReelGeneratorApp extends StatelessWidget {
-  const ReelGeneratorApp({super.key});
+class ReelGenApp extends StatelessWidget {
+  const ReelGenApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'REELGEN AI',
+      title: 'SelloreAI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -47,14 +68,28 @@ class ReelGeneratorApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(), // Start securely at Login
+      home: const LoginScreen(),
+      routes: {
+        '/customer-order': (context) {
+          final productId = ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          return CustomerOrderScreen(productId: productId);
+        },
+        '/notifications': (context) => const NotificationScreen(),
+        '/search': (context) => const SearchScreen(),
+        '/otp-verification': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return OtpVerificationScreen(
+            verificationId: args?['verificationId'] ?? '',
+            email: args?['email'] ?? '',
+            password: args?['password'] ?? '',
+            role: args?['role'] ?? '',
+          );
+        },
+      },
     );
   }
 }
 
-// ------------------------------------
-// UNIFIED PLATFORM APP NAVIGATOR SHELL
-// ------------------------------------
 class UnifiedParentNavigationShell extends StatefulWidget {
   const UnifiedParentNavigationShell({super.key});
 
@@ -66,10 +101,9 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
   int _currentIndex = 0;
   final FirebaseService _firebaseService = FirebaseService();
 
-  // Sub-Navigation parameters inside tabs
-  int _activeCreateSubTab = 0; // 0=Script, 1=Voice, 2=ImageToVideo, 3=Photoshoot, 4=Avatar
-  int _activeProjectsSubTab = 0; // 0=Reel Preview, 1=Sponsors, 2=OTP Contract Secure
-  int _activeAnalyticsSubTab = 0; // 1=Invoicing Revenue, 2=Reel Reach Graphs
+  int _activeCreateSubTab = 0;
+  int _activeProjectsSubTab = 0;
+  int _activeAnalyticsSubTab = 0;
   bool _disclaimerAccepted = false;
 
   @override
@@ -99,7 +133,7 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
   Widget build(BuildContext context) {
     final user = _firebaseService.currentUser;
     final currentRole = user?.role ?? 'INFLUENCER';
-    final name = user?.displayName ?? 'GEN CREATOR';
+    final normalizedRole = _normalizeRole(currentRole);
 
     return Scaffold(
       appBar: AppBar(
@@ -117,13 +151,24 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
             ),
             const SizedBox(width: 8),
             const Text(
-              'REELGEN AI',
-              style: TextStyle(fontWeight: FontWeight.black, fontSize: 16, letterSpacing: 1),
+              'SelloreAI',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1),
             ),
           ],
         ),
         actions: [
-          // Dynamic role contextual indicator
+          IconButton(
+            icon: const Icon(Icons.search, color: Colors.white),
+            onPressed: () {
+              Navigator.pushNamed(context, '/search');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.notifications, color: Colors.white),
+            onPressed: () {
+              Navigator.pushNamed(context, '/notifications');
+            },
+          ),
           Center(
             child: Container(
               margin: const EdgeInsets.only(right: 12),
@@ -167,51 +212,67 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
         unselectedItemColor: const Color(0xFF938F99),
         selectedFontSize: 11,
         unselectedFontSize: 11,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Create'),
-          BottomNavigationBarItem(icon: Icon(Icons.movie_filter_outlined), activeIcon: Icon(Icons.movie_filter), label: 'Projects'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'Analytics'),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
-        ],
+        items: _getBottomNavItems(normalizedRole),
       ),
     );
   }
 
+  List<BottomNavigationBarItem> _getBottomNavItems(String role) {
+    if (role == 'INFLUENCER') {
+      return const [
+        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Create'),
+        BottomNavigationBarItem(icon: Icon(Icons.movie_filter_outlined), activeIcon: Icon(Icons.movie_filter), label: 'Projects'),
+        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'Analytics'),
+        BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+      ];
+    }
+    return const [
+      BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+      BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'Analytics'),
+      BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+    ];
+  }
+
   Widget _buildBodyTab(String role) {
+    final normalizedRole = _normalizeRole(role);
+
     switch (_currentIndex) {
-      case 0: // Home Tab context based on role
-        if (role == 'INFLUENCER') return InfluencerDashboardScreen(onSwitchTab: (idx, {subTab}) async => _switchCoreTabFromOutside(idx, subTab: subTab));
-        if (role == 'VENDOR') return const VendorDashboardScreen();
-        if (role == 'ADMIN') return const AdminDashboardScreen();
+      case 0:
+        if (normalizedRole == 'INFLUENCER') return const InfluencerDashboardScreen();
+        if (normalizedRole == 'VENDOR') return const VendorDashboardScreen();
+        if (normalizedRole == 'ADMIN') return const AdminDashboardScreen();
+        if (normalizedRole == 'SUPER_ADMIN') return const SuperAdminDashboardScreen();
+        if (normalizedRole == 'SUB_ADMIN') return const SubAdminDashboardScreen();
         return const Center(child: Text('Workspace loading...'));
 
-      case 1: // Create Tab Hub
+      case 1:
+        if (normalizedRole != 'INFLUENCER') {
+          return const Center(child: Text('Access Denied'));
+        }
         return Column(
           children: [
             _buildHorizontalSubNav(
               currentIndex: _activeCreateSubTab,
               onTap: (val) => setState(() => _activeCreateSubTab = val),
-              items: ['AI Script', 'Voice Cloner', 'Slideshow', 'Studio Shoot', 'Avatar Profile', 'Sound Library', 'Advanced Upload'],
+              items: ['SelloreAI', 'Sound Library'],
             ),
             Expanded(
               child: IndexedStack(
                 index: _activeCreateSubTab,
                 children: const [
-                  ScriptGeneratorScreen(),
-                  VoiceUploadScreen(),
-                  ImageToVideoScreen(),
-                  PhotoshootStudioScreen(),
-                  AvatarCloneScreen(),
+                  SelloreAIScreen(),
                   SoundLibraryScreen(),
-                  AdvancedUploadScreen(),
                 ],
               ),
             ),
           ],
         );
 
-      case 2: // Projects - Link tracking & approvals
+      case 2:
+        if (normalizedRole != 'INFLUENCER') {
+          return const Center(child: Text('Access Denied'));
+        }
         return Column(
           children: [
             _buildHorizontalSubNav(
@@ -225,7 +286,12 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
                 children: const [
                   ReelPreviewScreen(),
                   ProductSelectionScreen(),
-                  OtpVerificationScreen(),
+                  OtpVerificationScreen(
+                    verificationId: '',
+                    email: '',
+                    password: '',
+                    role: '',
+                  ),
                   ParcelTrackingScreen(),
                 ],
               ),
@@ -233,7 +299,7 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
           ],
         );
 
-      case 3: // Analytics
+      case 3:
         return Column(
           children: [
             _buildHorizontalSubNav(
@@ -253,41 +319,19 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
           ],
         );
 
-      case 4: // Profile & switch role
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildProfileHeaderCard(),
-              const SizedBox(height: 20),
-              _buildRoleSwitcherCard(role),
-              const SizedBox(height: 20),
-              _buildDisclaimerCard(),
-              const SizedBox(height: 30),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: () {
-                  _firebaseService.logout();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  );
-                },
-                icon: const Icon(Icons.exit_to_app),
-                label: const Text('SECURE SIGN OUT', style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
-            ],
-          ),
-        );
+      case 4:
+        return const ProfileScreen();
 
       default:
         return const Center(child: Text('Hub section loading...'));
     }
+  }
+
+  String _normalizeRole(String role) {
+    if (role == 'CREATOR') return 'INFLUENCER';
+    if (role == 'MERCHANT') return 'VENDOR';
+    if (role == 'AUDITOR') return 'ADMIN';
+    return role;
   }
 
   Widget _buildHorizontalSubNav({
@@ -327,135 +371,6 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildProfileHeaderCard() {
-    final user = _firebaseService.currentUser;
-    final name = user?.displayName ?? 'CREATOR';
-    final email = user?.email ?? 'creator@reelgen.ai';
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2B2930),
-        border: Border.all(color: const Color(0xFF49454F)),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF381E72)),
-            child: const Icon(Icons.person, color: Colors.white, size: 28),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.black)),
-                Text(email, style: const TextStyle(color: Color(0xFF938F99), fontSize: 12)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoleSwitcherCard(String active) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2B2930),
-        border: Border.all(color: const Color(0xFF49454F)),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text('Switch Workplace Context on Fly', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              _buildRoleSwitchBtn('INFLUENCER', 'Creator', active == 'INFLUENCER'),
-              _buildRoleSwitchBtn('VENDOR', 'Merchant', active == 'VENDOR'),
-              _buildRoleSwitchBtn('ADMIN', 'Auditor', active == 'ADMIN'),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRoleSwitchBtn(String roleKey, String label, bool isSelected) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          _firebaseService.switchRole(roleKey);
-          setState(() {});
-        },
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF381E72) : const Color(0x13FFFFFF),
-            border: Border.all(color: isSelected ? const Color(0xFFD0BCFF) : const Color(0xFF49454F)),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: isSelected ? Colors.white : const Color(0xFF938F99),
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDisclaimerCard() {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF2B2930),
-        border: Border.all(color: const Color(0xFF49454F)),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.gavel_outlined, color: Color(0xFFFF4B8A), size: 18),
-              SizedBox(width: 8),
-              Text('CONTENT DISCLAIMER POLICY', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            '"I confirm that I own this content or have permission to use it. I am responsible for any copyright or legal issue related to uploaded content."',
-            style: TextStyle(color: Color(0xFF938F99), fontSize: 11, fontStyle: FontStyle.italic, height: 1.4),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Checkbox(
-                value: _disclaimerAccepted,
-                activeColor: const Color(0xFFFF4B8A),
-                onChanged: (val) => setState(() => _disclaimerAccepted = val!),
-              ),
-              const Expanded(
-                child: Text('I agree to the copyright and legal conditions of ReelGen AI.', style: TextStyle(color: Colors.white, fontSize: 10)),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

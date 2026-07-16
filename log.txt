@@ -1,0 +1,506 @@
+Launching lib\main.dart on Chrome in debug mode...
+Error: unable to find directory entry in pubspec.yaml: C:\Users\Arti\Desktop\reelgenai\assets\images\
+Error: unable to find directory entry in pubspec.yaml: C:\Users\Arti\Desktop\reelgenai\assets\videos\
+Waiting for connection from debug service on Chrome...          
+lib/main.dart:58:1: Error: Expected a declaration, but got '}'.
+}
+^
+lib/features/ai_script_generator/script_generator_screen.dart:225:43: Error: Type 'GeneratedScript' not found.
+  Widget _buildLiveCollectionConsole(List<GeneratedScript> items) {
+                                          ^^^^^^^^^^^^^^^
+lib/features/voice_upload/voice_upload_screen.dart:232:36: Error: Type 'VoiceSample' not found.
+  Widget _buildStorageConsole(List<VoiceSample> samples) {
+                                   ^^^^^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:470:33: Error: Type 'ImageVideoProject' not found.
+  Widget _buildLogsConsole(List<ImageVideoProject> list) {
+                                ^^^^^^^^^^^^^^^^^
+lib/features/photoshoot_studio/photoshoot_studio_screen.dart:273:39: Error: Type 'PhotoshootProject' not found.
+  Widget _buildPhotoshootConsole(List<PhotoshootProject> list) {
+                                      ^^^^^^^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:137:34: Error: Type 'PromoProduct' not found.
+  Widget _buildProductsList(List<PromoProduct> items) {
+                                 ^^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:228:38: Error: Type 'ProductPromotion' not found.
+  Widget _buildFirestoreConsole(List<ProductPromotion> promos) {
+                                     ^^^^^^^^^^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:320:42: Error: Type 'AvatarProfile' not found.
+  Widget _buildActiveProfileConsole(List<AvatarProfile> profiles) {
+                                         ^^^^^^^^^^^^^
+lib/main.dart:31:16: Error: Couldn't find constructor 'ReelGeneratorApp'.
+  runApp(const ReelGeneratorApp());
+               ^^^^^^^^^^^^^^^^
+lib/main.dart:126:55: Error: Member not found: 'black'.
+              style: TextStyle(fontWeight: FontWeight.black, fontSize: 16, letterSpacing: 1),
+                                                      ^^^^^
+lib/main.dart:363:109: Error: Member not found: 'black'.
+                Text(name, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/login/login_screen.dart:103:46: Error: Member not found: 'black'.
+                      fontWeight: FontWeight.black,
+                                             ^^^^^
+lib/features/role_selection/role_selection_screen.dart:56:44: Error: Member not found: 'black'.
+                    fontWeight: FontWeight.black,
+                                           ^^^^^
+lib/features/influencer_dashboard/influencer_dashboard_screen.dart:72:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/influencer_dashboard/influencer_dashboard_screen.dart:101:9: Error: No named parameter with the name 'child'.
+        child: [
+        ^^^^^
+/C:/flutter/packages/flutter/lib/src/widgets/basic.dart:6008:9: Context: Found this candidate, but the arguments don't match.
+  const Column({
+        ^^^^^^
+lib/features/influencer_dashboard/influencer_dashboard_screen.dart:145:93: Error: Member not found: 'black'.
+            Text(value, style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/influencer_dashboard/influencer_dashboard_screen.dart:168:69: Error: Member not found: 'emerald'.
+        _buildLaunchCard('Verify OTP Keys', Icons.lock_open, Colors.emerald, () => _triggerNavigateDialog(context, 'OTP')),
+                                                                    ^^^^^^^
+lib/features/influencer_dashboard/influencer_dashboard_screen.dart:208:9: Error: No named parameter with the name 'dropdownColor'.
+        dropdownColor: const Color(0xFF2B2930),
+        ^^^^^^^^^^^^^
+/C:/flutter/packages/flutter/lib/src/material/dialog.dart:425:9: Context: Found this candidate, but the arguments don't match.
+  const AlertDialog({
+        ^^^^^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:218:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:227:94: Error: Member not found: 'black'.
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black, fontFamily: 'monospace'),
+                                                                                          ^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:366:48: Error: Member not found: 'between'.
+          mainAxisAlignment: MainAxisAlignment.between,
+                                               ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:433:60: Error: Member not found: 'between'.
+                      mainAxisAlignment: MainAxisAlignment.between,
+                                                           ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:437:108: Error: Member not found: 'black'.
+                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black, fontFamily: 'monospace'),
+                                                                                          ^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:457:60: Error: Member not found: 'between'.
+                      mainAxisAlignment: MainAxisAlignment.between,
+                                                           ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:615:48: Error: Member not found: 'between'.
+          mainAxisAlignment: MainAxisAlignment.between,
+                                               ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:697:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+lib/features/vendor_dashboard/vendor_dashboard_screen.dart:711:109: Error: Member not found: 'black'.
+                      style: const TextStyle(color: Color(0xFFD0BCFF), fontSize: 12, fontWeight: FontWeight.black, fontFamily: 'monospace', letterSpacing: 1.2),
+                                                                                          ^^^^^
+lib/features/admin_dashboard/admin_dashboard_screen.dart:76:104: Error: Member not found: 'black'.
+          Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/admin_dashboard/admin_dashboard_screen.dart:87:48: Error: Member not found: 'between'.
+          mainAxisAlignment: MainAxisAlignment.between,
+                                               ^^^^^^^
+lib/features/admin_dashboard/admin_dashboard_screen.dart:120:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:225:43: Error: 'GeneratedScript' isn't a type.
+  Widget _buildLiveCollectionConsole(List<GeneratedScript> items) {
+                                          ^^^^^^^^^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:237:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:263:43: Error: The getter 'id' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'id'.
+                      Text('DOC: ${script.id} (Product: ${script.productName})', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 10, fontFamily: 'monospace', fontWeight: FontWeight.bold)),
+                                          ^^
+lib/features/ai_script_generator/script_generator_screen.dart:263:66: Error: The getter 'productName' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'productName'.
+                      Text('DOC: ${script.id} (Product: ${script.productName})', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 10, fontFamily: 'monospace', fontWeight: FontWeight.bold)),
+                                                                 ^^^^^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:265:49: Error: The getter 'hook' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'hook'.
+                      Text('  "hook": "${script.hook}"', style: const TextStyle(color: Colors.white38, fontSize: 9, fontFamily: 'monospace')),
+                                                ^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:266:51: Error: The getter 'script' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'script'.
+                      Text('  "script": "${script.script}"', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 9, fontFamily: 'monospace')),
+                                                  ^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:267:52: Error: The getter 'caption' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'caption'.
+                      Text('  "caption": "${script.caption}"', style: const TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontFamily: 'monospace')),
+                                                   ^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:268:53: Error: The getter 'hashtags' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'hashtags'.
+                      Text('  "hashtags": "${script.hashtags}"', style: const TextStyle(color: Colors.white38, fontSize: 9, fontFamily: 'monospace')),
+                                                    ^^^^^^^^
+lib/features/ai_script_generator/script_generator_screen.dart:269:48: Error: The getter 'cta' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'cta'.
+                      Text('  "cta": "${script.cta}"', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                               ^^^
+lib/features/ai_script_generator/script_generator_screen.dart:270:58: Error: The getter 'voiceoverText' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'voiceoverText'.
+                      Text('  "voiceoverText": "${script.voiceoverText}"', style: const TextStyle(color: Colors.orangeAccent, fontSize: 9, fontFamily: 'monospace')),
+                                                         ^^^^^^^^^^^^^
+lib/features/voice_upload/voice_upload_screen.dart:232:36: Error: 'VoiceSample' isn't a type.
+  Widget _buildStorageConsole(List<VoiceSample> samples) {
+                                   ^^^^^^^^^^^
+lib/features/voice_upload/voice_upload_screen.dart:244:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:67:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:74:65: Error: Member not found: 'white64'.
+                    icon: const Icon(Icons.close, color: Colors.white64, size: 18),
+                                                                ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:158:48: Error: Member not found: 'between'.
+          mainAxisAlignment: MainAxisAlignment.between,
+                                               ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:211:66: Error: Member not found: 'between'.
+                            mainAxisAlignment: MainAxisAlignment.between,
+                                                                 ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:322:123: Error: Member not found: 'black'.
+                    Text('$_imageCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:470:33: Error: 'ImageVideoProject' isn't a type.
+  Widget _buildLogsConsole(List<ImageVideoProject> list) {
+                                ^^^^^^^^^^^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:482:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:511:48: Error: The getter 'id' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'id'.
+                      Text('PROJECT ID: ${proj.id}', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 10, fontFamily: 'monospace', fontWeight: FontWeight.bold)),
+                                               ^^
+lib/features/image_to_video/image_to_video_screen.dart:513:54: Error: The getter 'imageCount' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'imageCount'.
+                      Text('  "total_frames": ${proj.imageCount},', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                                     ^^^^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:514:57: Error: The getter 'textOverlay' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'textOverlay'.
+                      Text('  "overlay_markup": "${proj.textOverlay}",', style: const TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontFamily: 'monospace')),
+                                                        ^^^^^^^^^^^
+lib/features/image_to_video/image_to_video_screen.dart:515:59: Error: The getter 'music' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'music'.
+                      Text('  "background_track": "${proj.music}",', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                                          ^^^^^
+lib/features/photoshoot_studio/photoshoot_studio_screen.dart:202:124: Error: Member not found: 'black'.
+                    Text('$_photosCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/photoshoot_studio/photoshoot_studio_screen.dart:273:39: Error: 'PhotoshootProject' isn't a type.
+  Widget _buildPhotoshootConsole(List<PhotoshootProject> list) {
+                                      ^^^^^^^^^^^^^^^^^
+lib/features/photoshoot_studio/photoshoot_studio_screen.dart:285:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:62:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/product_selection/product_selection_screen.dart:137:34: Error: 'PromoProduct' isn't a type.
+  Widget _buildProductsList(List<PromoProduct> items) {
+                                 ^^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:228:38: Error: 'ProductPromotion' isn't a type.
+  Widget _buildFirestoreConsole(List<ProductPromotion> promos) {
+                                     ^^^^^^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:240:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:273:62: Error: Member not found: 'between'.
+                        mainAxisAlignment: MainAxisAlignment.between,
+                                                             ^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:266:32: Error: The getter 'status' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'status'.
+                      color: p.status == 'APPROVED' ? Colors.cyan.withOpacity(0.4) : (p.status == 'VERIFIED' ? const Color(0xFFC4FF62).withOpacity(0.4) : Colors.transparent),
+                               ^^^^^^
+lib/features/product_selection/product_selection_screen.dart:266:89: Error: The getter 'status' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'status'.
+                      color: p.status == 'APPROVED' ? Colors.cyan.withOpacity(0.4) : (p.status == 'VERIFIED' ? const Color(0xFFC4FF62).withOpacity(0.4) : Colors.transparent),
+                                                                                        ^^^^^^
+lib/features/product_selection/product_selection_screen.dart:275:41: Error: The getter 'id' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'id'.
+                          Text('ID: ${p.id}', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 10, fontFamily: 'monospace', fontWeight: FontWeight.bold)),
+                                        ^^
+lib/features/product_selection/product_selection_screen.dart:277:31: Error: The getter 'status' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'status'.
+                            p.status,
+                              ^^^^^^
+lib/features/product_selection/product_selection_screen.dart:279:40: Error: The getter 'status' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'status'.
+                              color: p.status == 'VERIFIED' ? const Color(0xFFC4FF62) : (p.status == 'APPROVED' ? Colors.cyan : Colors.amber),
+                                       ^^^^^^
+lib/features/product_selection/product_selection_screen.dart:279:92: Error: The getter 'status' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'status'.
+                              color: p.status == 'VERIFIED' ? const Color(0xFFC4FF62) : (p.status == 'APPROVED' ? Colors.cyan : Colors.amber),
+                                                                                          ^^^^^^
+lib/features/product_selection/product_selection_screen.dart:288:52: Error: The getter 'influencerId' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'influencerId'.
+                      Text('  "influencerId": "${p.influencerId}",', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                                   ^^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:289:51: Error: The getter 'productName' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'productName'.
+                      Text('  "productName": "${p.productName}",', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                                  ^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:290:50: Error: The getter 'vendorCode' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'vendorCode'.
+                      Text('  "vendorCode": "${p.vendorCode}",', style: const TextStyle(color: Colors.white70, fontSize: 9, fontFamily: 'monospace')),
+                                                 ^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:291:51: Error: The getter 'approvalOtp' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'approvalOtp'.
+                      Text('  "approvalOtp": "${p.approvalOtp.isEmpty ? 'Waiting...' : p.approvalOtp}",', style: const TextStyle(color: Colors.orangeAccent, fontSize: 9, fontFamily: 'monospace')),
+                                                  ^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:291:90: Error: The getter 'approvalOtp' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'approvalOtp'.
+                      Text('  "approvalOtp": "${p.approvalOtp.isEmpty ? 'Waiting...' : p.approvalOtp}",', style: const TextStyle(color: Colors.orangeAccent, fontSize: 9, fontFamily: 'monospace')),
+                                                                                         ^^^^^^^^^^^
+lib/features/product_selection/product_selection_screen.dart:292:50: Error: The getter 'otpVerified' isn't defined for the type 'Object?'.
+ - 'Object' is from 'dart:core'.
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'otpVerified'.
+                      Text('  "otpVerified": ${p.otpVerified},', style: const TextStyle(color: Colors.cyan, fontSize: 9, fontFamily: 'monospace')),
+                                                 ^^^^^^^^^^^
+lib/features/product_promotion_otp/otp_verification_screen.dart:72:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/product_promotion_otp/otp_verification_screen.dart:350:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/influencer_business_tracking/business_tracking_screen.dart:24:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/influencer_business_tracking/business_tracking_screen.dart:53:23: Error: A value of type 'num' can't be assigned to a variable of type 'int'.
+      aggregateClicks += a.clicks;
+                      ^
+lib/features/influencer_business_tracking/business_tracking_screen.dart:54:23: Error: A value of type 'num' can't be assigned to a variable of type 'int'.
+      aggregateOrders += a.orders;
+                      ^
+lib/features/influencer_business_tracking/business_tracking_screen.dart:96:48: Error: Member not found: 'between'.
+          mainAxisAlignment: MainAxisAlignment.between,
+                                               ^^^^^^^
+lib/features/influencer_business_tracking/business_tracking_screen.dart:158:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+lib/features/reel_tracking/reel_tracking_screen.dart:15:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/reel_tracking/reel_tracking_screen.dart:64:119: Error: Member not found: 'black'.
+          const Text('57,940 Total Views', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/reel_tracking/reel_tracking_screen.dart:140:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/reel_preview/reel_preview_screen.dart:43:137: Error: Member not found: 'black'.
+                  const Text('REELGEN AI SCREENPLAY PLAYER', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black, letterSpacing: 1)),
+                                                                                          ^^^^^
+lib/features/reel_preview/reel_preview_screen.dart:116:129: Error: Member not found: 'black'.
+                          child: const Text('JOINED', style: TextStyle(color: Colors.black, fontSize: 7, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/reel_preview/reel_preview_screen.dart:18:9: Error: No named parameter with the name 'maxHeight'.
+        maxHeight: 520,
+        ^^^^^^^^^
+/C:/flutter/packages/flutter/lib/src/widgets/container.dart:255:3: Context: Found this candidate, but the arguments don't match.
+  Container({
+  ^^^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:77:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:84:65: Error: Member not found: 'white64'.
+                    icon: const Icon(Icons.close, color: Colors.white64, size: 18),
+                                                                ^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:320:42: Error: 'AvatarProfile' isn't a type.
+  Widget _buildActiveProfileConsole(List<AvatarProfile> profiles) {
+                                         ^^^^^^^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:332:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/avatar_clone/avatar_clone_screen.dart:365:62: Error: Member not found: 'between'.
+                        mainAxisAlignment: MainAxisAlignment.between,
+                                                             ^^^^^^^
+lib/features/parcel_tracking/parcel_tracking_screen.dart:53:88: Error: Member not found: 'black'.
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+                                                                                       ^^^^^
+lib/features/parcel_tracking/parcel_tracking_screen.dart:115:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/sound_library/sound_library_screen.dart:196:36: Error: Member not found: 'black'.
+            fontWeight: FontWeight.black,
+                                   ^^^^^
+lib/features/sound_library/sound_library_screen.dart:230:50: Error: Member not found: 'between'.
+            mainAxisAlignment: MainAxisAlignment.between,
+                                                 ^^^^^^^
+lib/features/sound_library/sound_library_screen.dart:298:48: Error: Member not found: 'black'.
+                        fontWeight: FontWeight.black,
+                                               ^^^^^
+lib/features/sound_library/sound_library_screen.dart:382:61: Error: Member not found: 'black'.
+                    style: TextStyle(fontWeight: FontWeight.black, fontSize: 11, letterSpacing: 0.5),
+                                                            ^^^^^
+lib/features/sound_library/sound_library_screen.dart:778:55: Error: Member not found: 'black'.
+              style: TextStyle(fontWeight: FontWeight.black, fontSize: 11, letterSpacing: 0.5),
+                                                      ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:148:58: Error: Member not found: 'between'.
+                    mainAxisAlignment: MainAxisAlignment.between,
+                                                         ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:152:86: Error: Member not found: 'black'.
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.black, fontSize: 13),
+                                                                                     ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:197:134: Error: Member not found: 'black'.
+                                ? const Text('ADDED', style: TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontWeight: FontWeight.black))
+                                                                                          ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:472:36: Error: Member not found: 'black'.
+            fontWeight: FontWeight.black,
+                                   ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:534:92: Error: Member not found: 'black'.
+                style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.black, letterSpacing: 0.5),
+                                                                                          ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:542:29: Error: Member not found: 'white80'.
+              color: Colors.white80,
+                            ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:695:60: Error: Member not found: 'between'.
+                      mainAxisAlignment: MainAxisAlignment.between,
+                                                           ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:720:37: Error: Member not found: 'black80'.
+                    colors: [Colors.black80, Colors.transparent],
+                                    ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:726:56: Error: Member not found: 'between'.
+                  mainAxisAlignment: MainAxisAlignment.between,
+                                                       ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:626:7: Error: No named parameter with the name 'overflow'.
+      overflow: BoxOverflow.hidden,
+      ^^^^^^^^
+/C:/flutter/packages/flutter/lib/src/widgets/container.dart:255:3: Context: Found this candidate, but the arguments don't match.
+  Container({
+  ^^^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:1158:118: Error: Member not found: 'black'.
+              Text('Save Campaign Draft', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+                                                                                          ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:1187:55: Error: Member not found: 'black'.
+              style: TextStyle(fontWeight: FontWeight.black, fontSize: 11, letterSpacing: 0.5),
+                                                      ^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:1232:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+lib/features/advanced_upload/advanced_upload_screen.dart:1280:54: Error: Member not found: 'between'.
+                mainAxisAlignment: MainAxisAlignment.between,
+                                                     ^^^^^^^
+Unhandled exception:
+Unsupported operation: Unsupported invalid type InvalidType(<invalid>) (InvalidType). Encountered while compiling file:///C:/Users/Arti/Desktop/reelgenai/lib/features/avatar_clone/avatar_clone_screen.dart, which contains the type: InvalidType(<invalid>).
+#0      LibraryCompiler._typeCompilationError (package:dev_compiler/src/kernel/compiler_new.dart:4480)
+#1      LibraryCompiler._emitType (package:dev_compiler/src/kernel/compiler_new.dart:4445)
+#2      LibraryCompiler._emitCast (package:dev_compiler/src/kernel/compiler_new.dart:8676)
+#3      LibraryCompiler._rewriteInvocationWithHotReloadChecks (package:dev_compiler/src/kernel/compiler_new.dart:7890)
+#4      LibraryCompiler.visitInstanceInvocation (package:dev_compiler/src/kernel/compiler_new.dart:6610)
+#5      InstanceInvocation.accept (package:kernel/src/ast/expressions.dart:1802)
+#6      LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#7      LibraryCompiler._emitHotReloadChecksConditional (package:dev_compiler/src/kernel/compiler_new.dart:7759)
+#8      LibraryCompiler.visitInstanceInvocation (package:dev_compiler/src/kernel/compiler_new.dart:6607)
+#9      InstanceInvocation.accept (package:kernel/src/ast/expressions.dart:1802)
+#10     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#11     LibraryCompiler._visitInitializer (package:dev_compiler/src/kernel/compiler_new.dart:2731)
+#12     LibraryCompiler.visitVariableDeclaration (package:dev_compiler/src/kernel/compiler_new.dart:6036)
+#13     StatementVisitorExperimentExclusionMixin.visitVariableStatement (package:kernel/visitor.dart:3289)
+#14     VariableStatement.accept (package:kernel/src/ast/statements.dart:1870)
+#15     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#16     MappedIterable.elementAt (dart:_internal/iterable.dart:402)
+#17     ListIterator.moveNext (dart:_internal/iterable.dart:371)
+#18     new _GrowableList._ofEfficientLengthIterable (dart:core-patch/growable_array.dart:194)
+#19     new _GrowableList.of (dart:core-patch/growable_array.dart:154)
+#20     new List.of (dart:core-patch/array_patch.dart:39)
+#21     SetBase.toList (dart:collection/set.dart:119)
+#22     LibraryCompiler.visitBlock (package:dev_compiler/src/kernel/compiler_new.dart:5257)
+#23     Block.accept (package:kernel/src/ast/statements.dart:106)
+#24     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#25     LibraryCompiler._emitFunctionScopedBody (package:dev_compiler/src/kernel/compiler_new.dart:5081)
+#26     LibraryCompiler._emitFunction.<anonymous closure> (package:dev_compiler/src/kernel/compiler_new.dart:4667)
+#27     LibraryCompiler._withLetScope (package:dev_compiler/src/kernel/compiler_new.dart:3661)
+#28     LibraryCompiler._withCurrentFunction (package:dev_compiler/src/kernel/compiler_new.dart:4841)
+#29     LibraryCompiler._emitFunction (package:dev_compiler/src/kernel/compiler_new.dart:4659)
+#30     LibraryCompiler._emitArrowFunction (package:dev_compiler/src/kernel/compiler_new.dart:8901)
+#31     LibraryCompiler.visitFunctionExpression (package:dev_compiler/src/kernel/compiler_new.dart:8891)
+#32     FunctionExpression.accept (package:kernel/src/ast/expressions.dart:4695)
+#33     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#34     LibraryCompiler._emitNamedExpression (package:dev_compiler/src/kernel/compiler_new.dart:8063)
+#35     LibraryCompiler._emitArgumentGroups (package:dev_compiler/src/kernel/compiler_new.dart:8053)
+#36     LibraryCompiler._emitArgumentList (package:dev_compiler/src/kernel/compiler_new.dart:8007)
+#37     LibraryCompiler.visitConstructorInvocation (package:dev_compiler/src/kernel/compiler_new.dart:8309)
+#38     ConstructorInvocation.accept (package:kernel/src/ast/expressions.dart:2695)
+#39     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#40     LibraryCompiler._emitArgumentGroups (package:dev_compiler/src/kernel/compiler_new.dart:8044)
+#41     LibraryCompiler._emitArgumentList (package:dev_compiler/src/kernel/compiler_new.dart:8007)
+#42     LibraryCompiler.visitInstanceInvocation (package:dev_compiler/src/kernel/compiler_new.dart:6573)
+#43     InstanceInvocation.accept (package:kernel/src/ast/expressions.dart:1802)
+#44     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#45     LibraryCompiler.visitExpressionStatement (package:dev_compiler/src/kernel/compiler_new.dart:5235)
+#46     ExpressionStatement.accept (package:kernel/src/ast/statements.dart:50)
+#47     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#48     LibraryCompiler._visitScope (package:dev_compiler/src/kernel/compiler_new.dart:5891)
+#49     LibraryCompiler.visitIfStatement (package:dev_compiler/src/kernel/compiler_new.dart:5880)
+#50     IfStatement.accept (package:kernel/src/ast/statements.dart:1034)
+#51     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#52     LibraryCompiler.visitBlockExpression (package:dev_compiler/src/kernel/compiler_new.dart:8983)
+#53     BlockExpression.accept (package:kernel/src/ast/expressions.dart:4875)
+#54     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#55     LibraryCompiler._emitNamedExpression (package:dev_compiler/src/kernel/compiler_new.dart:8063)
+#56     LibraryCompiler._emitArgumentGroups (package:dev_compiler/src/kernel/compiler_new.dart:8053)
+#57     LibraryCompiler._emitArgumentList (package:dev_compiler/src/kernel/compiler_new.dart:8007)
+#58     LibraryCompiler.visitConstructorInvocation (package:dev_compiler/src/kernel/compiler_new.dart:8309)
+#59     ConstructorInvocation.accept (package:kernel/src/ast/expressions.dart:2695)
+#60     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#61     LibraryCompiler._emitNamedExpression (package:dev_compiler/src/kernel/compiler_new.dart:8063)
+#62     LibraryCompiler._emitArgumentGroups (package:dev_compiler/src/kernel/compiler_new.dart:8053)
+#63     LibraryCompiler._emitArgumentList (package:dev_compiler/src/kernel/compiler_new.dart:8007)
+#64     LibraryCompiler.visitConstructorInvocation (package:dev_compiler/src/kernel/compiler_new.dart:8309)
+#65     ConstructorInvocation.accept (package:kernel/src/ast/expressions.dart:2695)
+#66     LibraryCompiler._visitExpression (package:dev_compiler/src/kernel/compiler_new.dart:5147)
+#67     LibraryCompiler.visitReturnStatement (package:dev_compiler/src/kernel/compiler_new.dart:5902)
+#68     ReturnStatement.accept (package:kernel/src/ast/statements.dart:1097)
+#69     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#70     MappedIterable.elementAt (dart:_internal/iterable.dart:402)
+#71     ListIterator.moveNext (dart:_internal/iterable.dart:371)
+#72     new _GrowableList._ofEfficientLengthIterable (dart:core-patch/growable_array.dart:194)
+#73     new _GrowableList.of (dart:core-patch/growable_array.dart:154)
+#74     new List.of (dart:core-patch/array_patch.dart:39)
+#75     SetBase.toList (dart:collection/set.dart:119)
+#76     LibraryCompiler.visitBlock (package:dev_compiler/src/kernel/compiler_new.dart:5257)
+#77     Block.accept (package:kernel/src/ast/statements.dart:106)
+#78     LibraryCompiler._visitStatement (package:dev_compiler/src/kernel/compiler_new.dart:5044)
+#79     LibraryCompiler._emitFunctionScopedBody (package:dev_compiler/src/kernel/compiler_new.dart:5081)
+#80     LibraryCompiler._emitFunction.<anonymous closure> (package:dev_compiler/src/kernel/compiler_new.dart:4667)
+#81     LibraryCompiler._withLetScope (package:dev_compiler/src/kernel/compiler_new.dart:3661)
+#82     LibraryCompiler._withCurrentFunction (package:dev_compiler/src/kernel/compiler_new.dart:4841)
+#83     LibraryCompiler._emitFunction (package:dev_compiler/src/kernel/compiler_new.dart:4659)
+#84     LibraryCompiler._emitMethodDeclaration.<anonymous closure> (package:dev_compiler/src/kernel/compiler_new.dart:2941)
+#85     LibraryCompiler._withMethodDeclarationContext (package:dev_compiler/src/kernel/compiler_new.dart:4866)
+#86     LibraryCompiler._emitMethodDeclaration (package:dev_compiler/src/kernel/compiler_new.dart:2939)
+#87     LibraryCompiler._emitClassProperties (package:dev_compiler/src/kernel/compiler_new.dart:2880)
+#88     LibraryCompiler._emitClassDeclaration (package:dev_compiler/src/kernel/compiler_new.dart:1488)
+#89     LibraryCompiler._emitClass (package:dev_compiler/src/kernel/compiler_new.dart:1426)
+#90     List.forEach (dart:core-patch/growable_array.dart:428)
+#91     LibraryCompiler._emitLibrary (package:dev_compiler/src/kernel/compiler_new.dart:1348)
+#92     LibraryCompiler.emitLibrary (package:dev_compiler/src/kernel/compiler_new.dart:962)
+#93     LibraryBundleCompiler.emitModule (package:dev_compiler/src/kernel/compiler_new.dart:165)
+#94     IncrementalJavaScriptBundler.compile (package:frontend_server/src/javascript_bundle.dart:324)
+#95     FrontendCompiler.writeJavaScriptBundle (package:frontend_server/frontend_server.dart:922)
+<asynchronous suspension>
+#96     FrontendCompiler.compile (package:frontend_server/frontend_server.dart:728)
+<asynchronous suspension>
+#97     listenAndCompile.<anonymous closure> (package:frontend_server/frontend_server.dart:1449)
+<asynchronous suspension>
+The Dart compiler exited unexpectedly.
+Waiting for connection from debug service on Chrome...             19.9s
+Failed to compile application.

@@ -1,3 +1,4 @@
+import '../../models/firestore_models.dart';
 import 'package:flutter/material.dart';
 import '../../services/firebase_service.dart';
 
@@ -37,6 +38,7 @@ class _VoiceUploadScreenState extends State<VoiceUploadScreen> {
     await Future.delayed(const Duration(milliseconds: 1000));
     _firebaseService.saveVoiceProfile(_nameController.text, '4.2 MB');
     setState(() => _isUploading = false);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Voice profile clone uploaded and indexed successfully in Storage & DB!')),
     );
@@ -146,8 +148,8 @@ class _VoiceUploadScreenState extends State<VoiceUploadScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.mic, color: Color(0xFFC4FF62), size: 22),
                     SizedBox(width: 8),
                     Text(
@@ -241,7 +243,7 @@ class _VoiceUploadScreenState extends State<VoiceUploadScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [

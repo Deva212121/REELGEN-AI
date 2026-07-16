@@ -50,7 +50,7 @@ class _ParcelTrackingScreenState extends State<ParcelTrackingScreen> {
         children: [
           const Text(
             'Secure Goods Delivery Status',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 4),
           const Text(
@@ -112,7 +112,7 @@ class _ParcelTrackingScreenState extends State<ParcelTrackingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Parcel ID: ${parcel.id}', style: const TextStyle(color: Color(0xFFD0BCFF), fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
               Container(

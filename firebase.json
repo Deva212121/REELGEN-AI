@@ -1,1 +1,16 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"reelgen-ai-6ec95","appId":"1:851061710789:android:b2375d2da8bf1b1a6535ac","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"reelgen-ai-6ec95","configurations":{"android":"1:851061710789:android:b2375d2da8bf1b1a6535ac","ios":"1:851061710789:ios:3c968e4135b6a6776535ac","macos":"1:851061710789:ios:3c968e4135b6a6776535ac","web":"1:851061710789:web:6a8085c02e294abc6535ac","windows":"1:851061710789:web:4f64614c7ea30dcb6535ac"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

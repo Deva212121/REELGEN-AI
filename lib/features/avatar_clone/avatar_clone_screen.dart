@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../models/firestore_models.dart';
 import '../../services/firebase_service.dart';
 
 class AvatarCloneScreen extends StatefulWidget {
@@ -48,6 +49,7 @@ class _AvatarCloneScreenState extends State<AvatarCloneScreen> {
       _selectedVoice,
     );
     setState(() => _isRendering = false);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('AI Avatar Clone synthesized & registered into Firestore!')),
     );
@@ -74,14 +76,14 @@ class _AvatarCloneScreenState extends State<AvatarCloneScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Simulated Face Asset Pool',
                     style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white64, size: 18),
+                    icon: const Icon(Icons.close, color: Colors.white60, size: 18),
                     onPressed: () => Navigator.pop(context),
                   )
                 ],
@@ -198,8 +200,8 @@ class _AvatarCloneScreenState extends State<AvatarCloneScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.face_retouching_natural, color: Color(0xFFD0BCFF), size: 22),
                     SizedBox(width: 8),
                     Text('AI Avatar Synthesizer Studio', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -329,7 +331,7 @@ class _AvatarCloneScreenState extends State<AvatarCloneScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
@@ -362,7 +364,7 @@ class _AvatarCloneScreenState extends State<AvatarCloneScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.between,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text('PROFILE ID: ${item.id}', style: const TextStyle(color: Color(0xffa5f3fc), fontSize: 11, fontWeight: FontWeight.bold, fontFamily: 'monospace')),
                           Container(

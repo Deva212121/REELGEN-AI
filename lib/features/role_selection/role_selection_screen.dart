@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../services/firebase_service.dart';
-import '../influencer_dashboard/influencer_dashboard_screen.dart'; // We can construct a unified main shell in main.dart or direct to home
-import '../../main.dart'; // Direct to unified platform navigator shell
+import '../../main.dart';
+import '../super_admin_dashboard/super_admin_dashboard_screen.dart';
+import '../sub_admin_dashboard/sub_admin_dashboard_screen.dart';
+import '../vendor_dashboard/vendor_dashboard_screen.dart';
+import '../admin_dashboard/admin_dashboard_screen.dart';
 
 class RoleSelectionScreen extends StatelessWidget {
   const RoleSelectionScreen({super.key});
@@ -9,8 +12,66 @@ class RoleSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseService().currentUser;
+    final userRole = user?.role ?? 'INFLUENCER';
     final userName = user?.displayName ?? 'GEN CREATOR';
 
+    // Sub-Admin → direct SubAdminDashboard
+    if (userRole == 'SUB_ADMIN') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const SubAdminDashboardScreen(),
+          ),
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Vendor → direct VendorDashboard
+    if (userRole == 'VENDOR') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const VendorDashboardScreen(),
+          ),
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Influencer → direct InfluencerDashboard (UnifiedParentNavigationShell)
+    if (userRole == 'INFLUENCER') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const UnifiedParentNavigationShell(),
+          ),
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Admin → direct AdminDashboard
+    if (userRole == 'ADMIN') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const AdminDashboardScreen(),
+          ),
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Baaki roles (Super Admin) ke liye normal screen
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -32,7 +93,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC4FF62).withOpacity(0.12),
+                      color: const Color(0xFFC4FF62).withAlpha((0.12 * 255).round()),
                       border: Border.all(color: const Color(0xFFC4FF62), width: 1),
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -53,7 +114,7 @@ class RoleSelectionScreen extends StatelessWidget {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
-                    fontWeight: FontWeight.black,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -66,32 +127,14 @@ class RoleSelectionScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-                // Mode Selection Buttons with unique styling and details
                 _buildRoleCard(
                   context: context,
-                  title: 'Influencer Module',
-                  role: 'INFLUENCER',
-                  desc: 'List products, request briefs, generate AI reels, track clicks and claim orders volume.',
-                  icon: Icons.movie_creation_outlined,
-                  accentColor: const Color(0xFFD0BCFF),
-                ),
-                const SizedBox(height: 16),
-                _buildRoleCard(
-                  context: context,
-                  title: 'Brand Vendor Module',
-                  role: 'VENDOR',
-                  desc: 'Publish products, generate OTP keys, manage influencer approval list, and track shipping parcels.',
-                  icon: Icons.storefront,
-                  accentColor: const Color(0xFFC4FF62),
-                ),
-                const SizedBox(height: 16),
-                _buildRoleCard(
-                  context: context,
-                  title: 'Platform Inspector Admin',
-                  role: 'ADMIN',
-                  desc: 'Audit transaction activity logs, global KPIs, parcel reports, and oversee system allocations.',
-                  icon: Icons.admin_panel_settings_outlined,
-                  accentColor: const Color(0xFFFDA4AF),
+                  title: 'Super Admin',
+                  role: 'SUPER_ADMIN',
+                  desc: 'Full platform control, partner management, inventory allocation, and global analytics.',
+                  icon: Icons.dashboard_customize,
+                  accentColor: const Color(0xFFFFD700),
+                  isSuperAdmin: true,
                 ),
                 const Spacer(),
                 const Text(
@@ -115,30 +158,54 @@ class RoleSelectionScreen extends StatelessWidget {
     required String desc,
     required IconData icon,
     required Color accentColor,
+    required bool isSuperAdmin,
   }) {
     return InkWell(
       onTap: () {
-        final service = FirebaseService();
-        service.switchRole(role);
-        // Navigate across to unified mainframe shell
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const UnifiedParentNavigationShell()),
-        );
+        if (role == 'SUPER_ADMIN') {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const SuperAdminDashboardScreen(),
+            ),
+          );
+        } else {
+          final service = FirebaseService();
+          service.switchRole(role);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const UnifiedParentNavigationShell(),
+            ),
+          );
+        }
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF2B2930),
+          color: isSuperAdmin
+              ? const Color(0xFF1A1A2E).withAlpha((0.8 * 255).round())
+              : const Color(0xFF2B2930),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF49454F), width: 1),
+          border: Border.all(
+            color: isSuperAdmin ? const Color(0xFFFFD700) : const Color(0xFF49454F),
+            width: isSuperAdmin ? 2 : 1,
+          ),
+          boxShadow: isSuperAdmin
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFFFD700).withAlpha((0.2 * 255).round()),
+                    blurRadius: 12,
+                    spreadRadius: 2,
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: accentColor.withOpacity(0.1),
+                color: accentColor.withAlpha((0.1 * 255).round()),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: accentColor, size: 28),
@@ -168,7 +235,11 @@ class RoleSelectionScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, color: Color(0xFF938F99), size: 14),
+            Icon(
+              isSuperAdmin ? Icons.star : Icons.arrow_forward_ios,
+              color: isSuperAdmin ? const Color(0xFFFFD700) : const Color(0xFF938F99),
+              size: 14,
+            ),
           ],
         ),
       ),

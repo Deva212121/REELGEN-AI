@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/firebase_service.dart';
+import '../../models/firestore_models.dart';
 
 class ImageToVideoScreen extends StatefulWidget {
   const ImageToVideoScreen({super.key});
@@ -64,14 +65,14 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Simulated Photo Pool Picker',
                     style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white64, size: 18),
+                    icon: const Icon(Icons.close, color: Colors.white60, size: 18),
                     onPressed: () => Navigator.pop(context),
                   )
                 ],
@@ -155,7 +156,7 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.between,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
               'Compile Queue Frames:',
@@ -163,8 +164,8 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
             ),
             GestureDetector(
               onTap: _showMockImagePicker,
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   Icon(Icons.add_photo_alternate_outlined, color: Color(0xFFC4FF62), size: 14),
                   SizedBox(width: 4),
                   Text(
@@ -208,7 +209,7 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.between,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Icon(Icons.picture_in_picture, color: Color(0xFFD0BCFF), size: 12),
                               GestureDetector(
@@ -262,6 +263,7 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
     }
     _firebaseService.createImageVideo(_imageCount, _textController.text, finalMusic);
     setState(() => _isProcessing = false);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Slideshow reel compiled & project saved into database!')),
     );
@@ -286,8 +288,8 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.video_camera_back_outlined, color: Color(0xFFD0BCFF), size: 22),
                     SizedBox(width: 8),
                     Text(
@@ -319,7 +321,7 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
                         }
                       },
                     ),
-                    Text('$_imageCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+                    Text('$_imageCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900)),
                     IconButton(
                       icon: const Icon(Icons.add_circle_outline, color: Color(0xFFC4FF62)),
                       onPressed: () {
@@ -431,9 +433,9 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFC4FF62).withOpacity(0.08),
+              color: const Color(0xFFC4FF62).withAlpha((0.08 * 255).round()),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFC4FF62).withOpacity(0.3)),
+              border: Border.all(color: const Color(0xFFC4FF62).withAlpha((0.3 * 255).round())),
             ),
             child: Row(
               children: [
@@ -479,7 +481,7 @@ class _ImageToVideoScreenState extends State<ImageToVideoScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [

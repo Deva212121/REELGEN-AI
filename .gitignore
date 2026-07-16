@@ -1,18 +1,37 @@
-*.iml
-.gradle
-.kotlin
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
-local.properties
+```
+# Dependencies
+.dart_tool/
+.packages
+.pub-cache/
+pubspec.lock
+
+# Build
+build/
+**/ios/.generated/
+**/android/.generated/
+
+# Environment
 .env
-debug.keystore
+.env.local
+*.env.*
+
+# Logs
+*.log
+**/logs
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE specific
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+```

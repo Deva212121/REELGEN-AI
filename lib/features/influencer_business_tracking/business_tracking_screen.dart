@@ -21,7 +21,7 @@ class _BusinessTrackingScreenState extends State<BusinessTrackingScreen> {
         children: [
           const Text(
             'Campaign Profit Ecosystem',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.black),
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 4),
           const Text(
@@ -50,8 +50,8 @@ class _BusinessTrackingScreenState extends State<BusinessTrackingScreen> {
     int aggregateOrders = 0;
     double aggregateBusiness = 0.0;
     for (var a in affiliates) {
-      aggregateClicks += a.clicks;
-      aggregateOrders += a.orders;
+aggregateClicks = aggregateClicks + ((a.clicks ?? 0) as num).toInt();
+aggregateOrders = aggregateOrders + ((a.orders ?? 0) as num).toInt(); 
       aggregateBusiness += a.businessAmount;
     }
     
@@ -93,7 +93,7 @@ class _BusinessTrackingScreenState extends State<BusinessTrackingScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.between,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title, style: const TextStyle(color: Color(0xFF938F99), fontSize: 11)),
             Text(count.toString(), style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
@@ -123,8 +123,8 @@ class _BusinessTrackingScreenState extends State<BusinessTrackingScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF49454F)),
       ),
-      child: Column(
-        children: const [
+      child: const Column(
+        children: [
           Icon(Icons.query_stats, color: Colors.blueGrey, size: 36),
           SizedBox(height: 10),
           Text('No active campaign analytics synced.', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
@@ -155,12 +155,12 @@ class _BusinessTrackingScreenState extends State<BusinessTrackingScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.between,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(aff.productName, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(color: const Color(0xFFC4FF62).withOpacity(0.12), borderRadius: BorderRadius.circular(4)),
+                    decoration: BoxDecoration(color: const Color(0xFFC4FF62).withAlpha((0.12 * 255).round()), borderRadius: BorderRadius.circular(4)),
                     child: Text('RG CODE: ${aff.referralCode}', style: const TextStyle(color: Color(0xFFC4FF62), fontSize: 9, fontWeight: FontWeight.bold)),
                   ),
                 ],

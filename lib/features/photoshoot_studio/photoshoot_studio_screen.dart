@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/firebase_service.dart';
+import '../../models/firestore_models.dart';
 
 class PhotoshootStudioScreen extends StatefulWidget {
   const PhotoshootStudioScreen({super.key});
@@ -52,6 +53,7 @@ class _PhotoshootStudioScreenState extends State<PhotoshootStudioScreen> {
       _photosCount,
     );
     setState(() => _isGenerating = false);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Photoshoot album compiled! Generated cinematic slideshow in Firestore!')),
     );
@@ -85,8 +87,8 @@ class _PhotoshootStudioScreenState extends State<PhotoshootStudioScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Icon(Icons.camera_roll_outlined, color: Color(0xFFFDA4AF), size: 22),
                     SizedBox(width: 8),
                     Text('Photoshoot Studio Engine', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
@@ -156,9 +158,9 @@ class _PhotoshootStudioScreenState extends State<PhotoshootStudioScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC4FF62).withOpacity(0.08),
+                      color: const Color(0xFFC4FF62).withAlpha((0.08 * 255).round()),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: const Color(0xFFC4FF62).withOpacity(0.3)),
+                      border: Border.all(color: const Color(0xFFC4FF62).withAlpha((0.3 * 255).round())),
                     ),
                     child: Row(
                       children: [
@@ -199,7 +201,7 @@ class _PhotoshootStudioScreenState extends State<PhotoshootStudioScreen> {
                         if (_photosCount > 1) setState(() => _photosCount--);
                       },
                     ),
-                    Text('$_photosCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.black)),
+                    Text('$_photosCount', style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w900)),
                     IconButton(
                       icon: const Icon(Icons.add_circle, color: Color(0xFFFF4B8A)),
                       onPressed: () {
@@ -282,7 +284,7 @@ class _PhotoshootStudioScreenState extends State<PhotoshootStudioScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.between,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
