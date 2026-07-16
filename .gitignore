@@ -35,3 +35,13 @@ Thumbs.db
 *.swo
 *~
 ```
+
+local.properties
+*.iml
+*.log
+log.txt
+runlog.txt
+**/__pycache__/
+*.pyc
+.dart_tool/
+build/
