@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:image_picker/image_picker.dart';
+import '../catalog/catalog_screen.dart';
 import '../../models/product_model.dart';
 import '../../models/partner_stock_model.dart';
 import '../../models/order_model.dart' as order_models;
@@ -88,14 +89,16 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Super Admin Dashboard'),
           backgroundColor: const Color(0xFF130F26),
           bottom: const TabBar(
+            isScrollable: true,
             tabs: [
               Tab(icon: Icon(Icons.add_box), text: 'Add Product'),
+              Tab(icon: Icon(Icons.inventory_2), text: 'Catalog'),
               Tab(icon: Icon(Icons.business), text: 'Partner Mgmt'),
               Tab(icon: Icon(Icons.analytics), text: 'CA Report'),
               Tab(icon: Icon(Icons.settings), text: 'Settings'),
@@ -106,6 +109,7 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
         body: TabBarView(
           children: [
             _buildAddProduct(),
+            const CatalogScreen.superAdmin(),
             _buildPartnerManagement(),
             _buildCAReport(),
             _buildSettings(),
