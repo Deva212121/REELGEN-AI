@@ -246,7 +246,7 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Upload Photo & Add Product'),
+                    : const Text('Done'),
               ),
             ],
           ),
