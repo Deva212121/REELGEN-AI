@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Commission type for a product.
 enum CommissionType {
-  fixed,   // fixed amount per unit sold
+  fixed, // fixed amount per unit sold
   percent, // percentage of product price
 }
 
@@ -46,6 +46,9 @@ class Product {
   // Other
   final String unit;
   final bool isActive;
+  final String? imageUrl;
+  final double? mrp;
+  final int? deliveryDays;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -74,6 +77,9 @@ class Product {
     required this.gstRate,
     this.unit = 'pc',
     this.isActive = true,
+    this.imageUrl,
+    this.mrp,
+    this.deliveryDays,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -81,7 +87,8 @@ class Product {
   factory Product.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     final typeStr = data['commissionType'] ?? 'percent';
-    final type = typeStr == 'fixed' ? CommissionType.fixed : CommissionType.percent;
+    final type =
+        typeStr == 'fixed' ? CommissionType.fixed : CommissionType.percent;
 
     return Product(
       id: doc.id,
@@ -108,6 +115,9 @@ class Product {
       gstRate: (data['gstRate'] ?? 0).toDouble(),
       unit: data['unit'] ?? 'pc',
       isActive: data['isActive'] ?? true,
+      imageUrl: data['imageUrl'] as String?,
+      mrp: (data['mrp'] as num?)?.toDouble(),
+      deliveryDays: (data['deliveryDays'] as num?)?.toInt(),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -138,6 +148,9 @@ class Product {
       'gstRate': gstRate,
       'unit': unit,
       'isActive': isActive,
+      'imageUrl': imageUrl,
+      'mrp': mrp,
+      'deliveryDays': deliveryDays,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
@@ -168,6 +181,9 @@ class Product {
     double? gstRate,
     String? unit,
     bool? isActive,
+    String? imageUrl,
+    double? mrp,
+    int? deliveryDays,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -196,6 +212,9 @@ class Product {
       gstRate: gstRate ?? this.gstRate,
       unit: unit ?? this.unit,
       isActive: isActive ?? this.isActive,
+      imageUrl: imageUrl ?? this.imageUrl,
+      mrp: mrp ?? this.mrp,
+      deliveryDays: deliveryDays ?? this.deliveryDays,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -212,4 +231,19 @@ class Product {
 
   int get availableStock => currentStock - reservedStock;
   bool get isLowStock => availableStock <= minStockLevel;
+
+  double get effectiveMrp {
+    if (mrp != null && mrp! >= price) {
+      return mrp!;
+    }
+    return price;
+  }
+
+  double get discountPercentage {
+    final effective = effectiveMrp;
+    if (effective <= price) return 0;
+    return ((effective - price) / effective) * 100;
+  }
+
+  bool get isInStock => availableStock > 0;
 }
