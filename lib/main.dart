@@ -4,7 +4,9 @@ import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
+import 'models/product_model.dart';
 import 'services/firebase_service.dart';
+import 'services/influencer_product_service.dart';
 import 'features/login/login_screen.dart';
 import 'features/influencer_dashboard/influencer_dashboard_screen.dart';
 import 'features/vendor_dashboard/vendor_dashboard_screen.dart';
@@ -13,7 +15,7 @@ import 'features/super_admin_dashboard/super_admin_dashboard_screen.dart';
 import 'features/sub_admin_dashboard/sub_admin_dashboard_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/ai_script_generator/sellore_ai_screen.dart';
-import 'features/product_selection/product_selection_screen.dart';
+import 'features/catalog/catalog_screen.dart';
 import 'features/product_promotion_otp/otp_verification_screen.dart';
 import 'features/influencer_business_tracking/business_tracking_screen.dart';
 import 'features/reel_tracking/reel_tracking_screen.dart';
@@ -100,6 +102,8 @@ class UnifiedParentNavigationShell extends StatefulWidget {
 class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationShell> {
   int _currentIndex = 0;
   final FirebaseService _firebaseService = FirebaseService();
+  final InfluencerProductService _influencerProductService =
+      InfluencerProductService();
 
   int _activeCreateSubTab = 0;
   int _activeProjectsSubTab = 0;
@@ -127,6 +131,10 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
         }
       }
     });
+  }
+
+  Future<void> _activateCatalogProduct(Product product) async {
+    await _influencerProductService.activateProduct(product);
   }
 
   @override
@@ -278,21 +286,23 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
             _buildHorizontalSubNav(
               currentIndex: _activeProjectsSubTab,
               onTap: (val) => setState(() => _activeProjectsSubTab = val),
-              items: ['Reels Play', 'Marketplace', 'Contract OTP', 'Track Cargo'],
+              items: ['Reels Play', 'Catalog', 'Contract OTP', 'Track Cargo'],
             ),
             Expanded(
               child: IndexedStack(
                 index: _activeProjectsSubTab,
-                children: const [
-                  ReelPreviewScreen(),
-                  ProductSelectionScreen(),
-                  OtpVerificationScreen(
+                children: [
+                  const ReelPreviewScreen(),
+                  CatalogScreen.influencer(
+                    onSellProduct: _activateCatalogProduct,
+                  ),
+                  const OtpVerificationScreen(
                     verificationId: '',
                     email: '',
                     password: '',
                     role: '',
                   ),
-                  ParcelTrackingScreen(),
+                  const ParcelTrackingScreen(),
                 ],
               ),
             ),
