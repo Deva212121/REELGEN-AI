@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../models/product_model.dart';
 import '../../models/partner_stock_model.dart';
 import '../../models/order_model.dart' as order_models;
@@ -21,12 +25,16 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
   final TextEditingController _designNumberController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-  final TextEditingController _imageUrlController = TextEditingController();
   final TextEditingController _mrpController = TextEditingController();
   final TextEditingController _deliveryDaysController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _commissionValueController = TextEditingController();
   CommissionType _selectedCommissionType = CommissionType.percent;
+  final ImagePicker _imagePicker = ImagePicker();
+  XFile? _selectedProductImage;
+  Uint8List? _selectedProductImageBytes;
+  bool _isPickingProductImage = false;
+  bool _isSavingProduct = false;
 
   // Allocate Stock Controllers
   final TextEditingController _partnerAmountController = TextEditingController();
@@ -61,7 +69,6 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
     _designNumberController.dispose();
     _priceController.dispose();
     _quantityController.dispose();
-    _imageUrlController.dispose();
     _mrpController.dispose();
     _deliveryDaysController.dispose();
     _categoryController.dispose();
@@ -152,11 +159,45 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
                 keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 8),
-              TextField(
-                controller: _imageUrlController,
-                decoration: const InputDecoration(labelText: 'Image URL (optional)'),
-                keyboardType: TextInputType.url,
+              OutlinedButton.icon(
+                onPressed: _isPickingProductImage || _isSavingProduct
+                    ? null
+                    : _pickProductImage,
+                icon: _isPickingProductImage
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.add_photo_alternate_outlined),
+                label: Text(
+                  _selectedProductImage == null
+                      ? 'Select Product Photo'
+                      : 'Change Product Photo',
+                ),
               ),
+              if (_selectedProductImageBytes != null) ...[
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.memory(
+                    _selectedProductImageBytes!,
+                    height: 220,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => const SizedBox(
+                      height: 120,
+                      child: Center(child: Text('Photo preview unavailable')),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _selectedProductImage!.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ],
               const SizedBox(height: 8),
               TextField(
                 controller: _deliveryDaysController,
@@ -194,18 +235,59 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
               ),
               const SizedBox(height: 12),
               ElevatedButton(
-                onPressed: _addProduct,
+                onPressed: _isSavingProduct ? null : _addProduct,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC4FF62),
                   foregroundColor: Colors.black,
                 ),
-                child: const Text('Add Product'),
+                child: _isSavingProduct
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Upload Photo & Add Product'),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _pickProductImage() async {
+    setState(() => _isPickingProductImage = true);
+    try {
+      final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 88,
+        maxWidth: 1800,
+      );
+      if (image == null) return;
+
+      final extension = _imageExtension(image.name);
+      if (!const {'jpg', 'jpeg', 'png', 'webp'}.contains(extension)) {
+        Fluttertoast.showToast(msg: 'Only JPG, PNG or WebP photos are allowed');
+        return;
+      }
+
+      final bytes = await image.readAsBytes();
+      const maximumSizeInBytes = 5 * 1024 * 1024;
+      if (bytes.isEmpty || bytes.length > maximumSizeInBytes) {
+        Fluttertoast.showToast(msg: 'Photo must be smaller than 5 MB');
+        return;
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _selectedProductImage = image;
+        _selectedProductImageBytes = bytes;
+      });
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Unable to select photo: $e');
+    } finally {
+      if (mounted) setState(() => _isPickingProductImage = false);
+    }
   }
 
   // ---------- Add Product Logic ----------
@@ -218,7 +300,6 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
     final deliveryDays = int.tryParse(_deliveryDaysController.text.trim());
     final category = _categoryController.text.trim();
     final commissionValue = double.tryParse(_commissionValueController.text.trim());
-    final imageUrl = _imageUrlController.text.trim();
 
     if (name.isEmpty) {
       Fluttertoast.showToast(msg: 'Product name is required');
@@ -256,18 +337,39 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
       Fluttertoast.showToast(msg: 'Percentage commission cannot exceed 100');
       return;
     }
-    if (imageUrl.isNotEmpty) {
-      final uri = Uri.tryParse(imageUrl);
-      final hasValidScheme = uri?.scheme == 'http' || uri?.scheme == 'https';
-      if (uri == null || !uri.isAbsolute || !hasValidScheme || uri.host.isEmpty) {
-        Fluttertoast.showToast(msg: 'Enter a valid HTTP or HTTPS image URL');
-        return;
-      }
+    final selectedImage = _selectedProductImage;
+    final selectedImageBytes = _selectedProductImageBytes;
+    if (selectedImage == null || selectedImageBytes == null) {
+      Fluttertoast.showToast(msg: 'Please select a product photo');
+      return;
     }
 
+    Reference? uploadedImageReference;
+    if (mounted) setState(() => _isSavingProduct = true);
     try {
+      final ref = _firestore.collection('products').doc();
+      final safeDesignNumber = designNumber.replaceAll(
+        RegExp(r'[^A-Za-z0-9_-]'),
+        '_',
+      );
+      final extension = _imageExtension(selectedImage.name);
+      uploadedImageReference = FirebaseStorage.instance.ref().child(
+            'product_images/$safeDesignNumber/${ref.id}.$extension',
+          );
+      await uploadedImageReference.putData(
+        selectedImageBytes,
+        SettableMetadata(
+          contentType: _imageContentType(extension),
+          customMetadata: {
+            'designNumber': designNumber,
+            'productId': ref.id,
+          },
+        ),
+      );
+      final imageUrl = await uploadedImageReference.getDownloadURL();
+
       final product = Product(
-        id: '',
+        id: ref.id,
         vendorId: 'vendor123',
         designNumber: designNumber,
         productCode: designNumber,
@@ -287,7 +389,7 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
         stockQty: quantity,
         commissionType: _selectedCommissionType,
         commissionValue: commissionValue,
-        imageUrl: imageUrl.isEmpty ? null : imageUrl,
+        imageUrl: imageUrl,
         mrp: mrp,
         deliveryDays: deliveryDays,
         gstHsnCode: '71131900',
@@ -298,14 +400,41 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
         updatedAt: DateTime.now(),
       );
 
-      final ref = _firestore.collection('products').doc();
-      await ref.set(product.copyWith(id: ref.id).toFirestore());
+      await ref.set(product.toFirestore());
 
       if (!mounted) return;
       Fluttertoast.showToast(msg: 'Product added successfully!');
       _clearAddProductFields();
     } catch (e) {
+      if (uploadedImageReference != null) {
+        try {
+          await uploadedImageReference.delete();
+        } catch (_) {
+          // The original upload error is more useful to the user.
+        }
+      }
       Fluttertoast.showToast(msg: 'Error: $e');
+    } finally {
+      if (mounted) setState(() => _isSavingProduct = false);
+    }
+  }
+
+  String _imageExtension(String fileName) {
+    final dotIndex = fileName.lastIndexOf('.');
+    if (dotIndex == -1 || dotIndex == fileName.length - 1) return '';
+    return fileName.substring(dotIndex + 1).toLowerCase();
+  }
+
+  String _imageContentType(String extension) {
+    switch (extension) {
+      case 'png':
+        return 'image/png';
+      case 'webp':
+        return 'image/webp';
+      case 'jpg':
+      case 'jpeg':
+      default:
+        return 'image/jpeg';
     }
   }
 
@@ -314,12 +443,15 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
     _designNumberController.clear();
     _priceController.clear();
     _quantityController.clear();
-    _imageUrlController.clear();
     _mrpController.clear();
     _deliveryDaysController.clear();
     _categoryController.clear();
     _commissionValueController.clear();
-    setState(() => _selectedCommissionType = CommissionType.percent);
+    setState(() {
+      _selectedCommissionType = CommissionType.percent;
+      _selectedProductImage = null;
+      _selectedProductImageBytes = null;
+    });
   }
 
   // ---------- Partner Management ----------
