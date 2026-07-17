@@ -6,13 +6,21 @@ import '../../models/product_model.dart';
 
 typedef ProductActivationHandler = Future<void> Function(Product product);
 
-class CatalogScreen extends StatefulWidget {
-  final ProductActivationHandler onSellProduct;
+enum CatalogViewMode { superAdmin, influencer }
 
-  const CatalogScreen({
+class CatalogScreen extends StatefulWidget {
+  final CatalogViewMode viewMode;
+  final ProductActivationHandler? onSellProduct;
+
+  const CatalogScreen.superAdmin({
+    super.key,
+  })  : viewMode = CatalogViewMode.superAdmin,
+        onSellProduct = null;
+
+  const CatalogScreen.influencer({
     super.key,
     required this.onSellProduct,
-  });
+  }) : viewMode = CatalogViewMode.influencer;
 
   @override
   State<CatalogScreen> createState() => _CatalogScreenState();
@@ -27,13 +35,16 @@ class _CatalogScreenState extends State<CatalogScreen> {
   String? _selectedCategory;
   bool _inStockOnly = false;
 
+  bool get _isInfluencerView =>
+      widget.viewMode == CatalogViewMode.influencer;
+
   @override
   void initState() {
     super.initState();
-    _productsStream = FirebaseFirestore.instance
-        .collection('products')
-        .where('isActive', isEqualTo: true)
-        .snapshots();
+    final products = FirebaseFirestore.instance.collection('products');
+    _productsStream = _isInfluencerView
+        ? products.where('isActive', isEqualTo: true).snapshots()
+        : products.snapshots();
   }
 
   @override
@@ -46,7 +57,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Catalog'),
+        title: Text(
+          _isInfluencerView ? 'Product Catalog' : 'Catalog Management',
+        ),
         backgroundColor: const Color(0xFF130F26),
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -67,7 +80,8 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
           final products = snapshot.data?.docs
                   .map((document) => Product.fromFirestore(document))
-                  .where((product) => product.isActive)
+                  .where((product) =>
+                      !_isInfluencerView || product.isActive)
                   .toList() ??
               <Product>[];
 
@@ -75,10 +89,12 @@ class _CatalogScreenState extends State<CatalogScreen> {
               (first, second) => second.updatedAt.compareTo(first.updatedAt));
 
           if (products.isEmpty) {
-            return const _CatalogMessage(
+            return _CatalogMessage(
               icon: Icons.inventory_2_outlined,
               title: 'No products available',
-              message: 'Active products added by Super Admin will appear here.',
+              message: _isInfluencerView
+                  ? 'Active products added by Super Admin will appear here.'
+                  : 'Products added by Super Admin will appear here.',
             );
           }
 
@@ -214,10 +230,13 @@ class _CatalogScreenState extends State<CatalogScreen> {
                           final product = filteredProducts[index];
                           return _CatalogProductCard(
                             product: product,
+                            showActivationAction: _isInfluencerView,
                             isActivating:
                                 _activatingProductIds.contains(product.id),
                             onViewDetails: () => _openProductDetails(product),
-                            onSellProduct: () => _requestActivation(product),
+                            onSellProduct: _isInfluencerView
+                                ? () => _requestActivation(product)
+                                : null,
                           );
                         },
                       );
@@ -241,6 +260,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
       MaterialPageRoute<void>(
         builder: (context) => CatalogProductDetailsScreen(
           product: product,
+          viewMode: widget.viewMode,
           onSellProduct: widget.onSellProduct,
         ),
       ),
@@ -248,7 +268,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
   }
 
   Future<void> _requestActivation(Product product) async {
-    if (!product.isInStock || _activatingProductIds.contains(product.id)) {
+    final activationHandler = widget.onSellProduct;
+    if (activationHandler == null ||
+        !product.isInStock ||
+        _activatingProductIds.contains(product.id)) {
       return;
     }
 
@@ -257,7 +280,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     setState(() => _activatingProductIds.add(product.id));
     try {
-      await widget.onSellProduct(product);
+      await activationHandler(product);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Product activated successfully.')),
@@ -288,12 +311,14 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
 class CatalogProductDetailsScreen extends StatefulWidget {
   final Product product;
-  final ProductActivationHandler onSellProduct;
+  final CatalogViewMode viewMode;
+  final ProductActivationHandler? onSellProduct;
 
   const CatalogProductDetailsScreen({
     super.key,
     required this.product,
-    required this.onSellProduct,
+    required this.viewMode,
+    this.onSellProduct,
   });
 
   @override
@@ -306,6 +331,8 @@ class _CatalogProductDetailsScreenState
   bool _isActivating = false;
 
   Product get product => widget.product;
+  bool get _isInfluencerView =>
+      widget.viewMode == CatalogViewMode.influencer;
 
   @override
   Widget build(BuildContext context) {
@@ -366,6 +393,11 @@ class _CatalogProductDetailsScreenState
                         _DetailRow(
                             label: 'Delivery time',
                             value: _deliveryLabel(product)),
+                        if (!_isInfluencerView)
+                          _DetailRow(
+                            label: 'Catalog status',
+                            value: product.isActive ? 'Active' : 'Inactive',
+                          ),
                       ],
                     ),
                   ),
@@ -377,26 +409,28 @@ class _CatalogProductDetailsScreenState
                   const SizedBox(height: 8),
                   Text(product.description?.trim() ?? ''),
                 ],
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: !product.isInStock || _isActivating
-                      ? null
-                      : _activateProduct,
-                  icon: _isActivating
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.campaign),
-                  label: Text(
-                    !product.isInStock
-                        ? 'Out of Stock'
-                        : _isActivating
-                            ? 'Activating...'
-                            : 'Sell This Product',
+                if (_isInfluencerView) ...[
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: !product.isInStock || _isActivating
+                        ? null
+                        : _activateProduct,
+                    icon: _isActivating
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.campaign),
+                    label: Text(
+                      !product.isInStock
+                          ? 'Out of Stock'
+                          : _isActivating
+                              ? 'Activating...'
+                              : 'Sell This Product',
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -406,12 +440,15 @@ class _CatalogProductDetailsScreenState
   }
 
   Future<void> _activateProduct() async {
+    final activationHandler = widget.onSellProduct;
+    if (activationHandler == null) return;
+
     final confirmed = await showProductActivationConfirmation(context, product);
     if (!confirmed || !mounted) return;
 
     setState(() => _isActivating = true);
     try {
-      await widget.onSellProduct(product);
+      await activationHandler(product);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Product activated successfully.')),
@@ -433,12 +470,14 @@ class _CatalogProductDetailsScreenState
 
 class _CatalogProductCard extends StatelessWidget {
   final Product product;
+  final bool showActivationAction;
   final bool isActivating;
   final VoidCallback onViewDetails;
-  final Future<void> Function() onSellProduct;
+  final Future<void> Function()? onSellProduct;
 
   const _CatalogProductCard({
     required this.product,
+    required this.showActivationAction,
     required this.isActivating,
     required this.onViewDetails,
     required this.onSellProduct,
@@ -504,6 +543,8 @@ class _CatalogProductCard extends StatelessWidget {
                   Text('Commission: ${_commissionLabel(product)}'),
                   Text('Stock: ${product.availableStock} ${product.unit}'),
                   Text('Delivery: ${_deliveryLabel(product)}'),
+                  if (!showActivationAction)
+                    Text('Status: ${product.isActive ? 'Active' : 'Inactive'}'),
                   const Spacer(),
                   Row(
                     children: [
@@ -513,22 +554,24 @@ class _CatalogProductCard extends StatelessWidget {
                           child: const Text('View Details'),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: !product.isInStock || isActivating
-                              ? null
-                              : onSellProduct,
-                          child: Text(
-                            !product.isInStock
-                                ? 'Out of Stock'
-                                : isActivating
-                                    ? 'Activating...'
-                                    : 'Sell This Product',
-                            overflow: TextOverflow.ellipsis,
+                      if (showActivationAction) ...[
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: !product.isInStock || isActivating
+                                ? null
+                                : onSellProduct,
+                            child: Text(
+                              !product.isInStock
+                                  ? 'Out of Stock'
+                                  : isActivating
+                                      ? 'Activating...'
+                                      : 'Sell This Product',
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ],
