@@ -22,6 +22,11 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
+  final TextEditingController _mrpController = TextEditingController();
+  final TextEditingController _deliveryDaysController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _commissionValueController = TextEditingController();
+  CommissionType _selectedCommissionType = CommissionType.percent;
 
   // Allocate Stock Controllers
   final TextEditingController _partnerAmountController = TextEditingController();
@@ -48,6 +53,22 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
   void initState() {
     super.initState();
     _loadSettings();
+  }
+
+  @override
+  void dispose() {
+    _productNameController.dispose();
+    _designNumberController.dispose();
+    _priceController.dispose();
+    _quantityController.dispose();
+    _imageUrlController.dispose();
+    _mrpController.dispose();
+    _deliveryDaysController.dispose();
+    _categoryController.dispose();
+    _commissionValueController.dispose();
+    _partnerAmountController.dispose();
+    _rentController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSettings() async {
@@ -115,8 +136,14 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
               const SizedBox(height: 8),
               TextField(
                 controller: _priceController,
-                decoration: const InputDecoration(labelText: 'Price (₹)'),
-                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Selling Price (₹)'),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _mrpController,
+                decoration: const InputDecoration(labelText: 'MRP (₹)'),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 8),
               TextField(
@@ -127,7 +154,43 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
               const SizedBox(height: 8),
               TextField(
                 controller: _imageUrlController,
-                decoration: const InputDecoration(labelText: 'Image URL'),
+                decoration: const InputDecoration(labelText: 'Image URL (optional)'),
+                keyboardType: TextInputType.url,
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _deliveryDaysController,
+                decoration: const InputDecoration(labelText: 'Delivery Days'),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _categoryController,
+                decoration: const InputDecoration(labelText: 'Category'),
+              ),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<CommissionType>(
+                decoration: const InputDecoration(labelText: 'Commission Type'),
+                value: _selectedCommissionType,
+                items: CommissionType.values.map((type) {
+                  return DropdownMenuItem<CommissionType>(
+                    value: type,
+                    child: Text(type.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value == null) return;
+                  setState(() => _selectedCommissionType = value);
+                },
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _commissionValueController,
+                decoration: const InputDecoration(
+                  labelText: 'Commission Value',
+                  helperText: 'Percentage (0–100) or fixed amount in ₹',
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 12),
               ElevatedButton(
@@ -146,16 +209,60 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
   }
 
   // ---------- Add Product Logic ----------
-  void _addProduct() async {
+  Future<void> _addProduct() async {
     final name = _productNameController.text.trim();
     final designNumber = _designNumberController.text.trim();
     final price = double.tryParse(_priceController.text.trim());
+    final mrp = double.tryParse(_mrpController.text.trim());
     final quantity = int.tryParse(_quantityController.text.trim());
+    final deliveryDays = int.tryParse(_deliveryDaysController.text.trim());
+    final category = _categoryController.text.trim();
+    final commissionValue = double.tryParse(_commissionValueController.text.trim());
     final imageUrl = _imageUrlController.text.trim();
 
-    if (name.isEmpty || designNumber.isEmpty || price == null || quantity == null) {
-      Fluttertoast.showToast(msg: 'Please fill all fields correctly');
+    if (name.isEmpty) {
+      Fluttertoast.showToast(msg: 'Product name is required');
       return;
+    }
+    if (designNumber.isEmpty) {
+      Fluttertoast.showToast(msg: 'Design number is required');
+      return;
+    }
+    if (price == null || price <= 0) {
+      Fluttertoast.showToast(msg: 'Selling price must be greater than 0');
+      return;
+    }
+    if (mrp == null || mrp < price) {
+      Fluttertoast.showToast(msg: 'MRP must be greater than or equal to selling price');
+      return;
+    }
+    if (quantity == null || quantity < 0) {
+      Fluttertoast.showToast(msg: 'Quantity must be a whole number of 0 or more');
+      return;
+    }
+    if (deliveryDays == null || deliveryDays <= 0) {
+      Fluttertoast.showToast(msg: 'Delivery days must be a whole number greater than 0');
+      return;
+    }
+    if (category.isEmpty) {
+      Fluttertoast.showToast(msg: 'Category is required');
+      return;
+    }
+    if (commissionValue == null || commissionValue < 0) {
+      Fluttertoast.showToast(msg: 'Commission value must be 0 or more');
+      return;
+    }
+    if (_selectedCommissionType == CommissionType.percent && commissionValue > 100) {
+      Fluttertoast.showToast(msg: 'Percentage commission cannot exceed 100');
+      return;
+    }
+    if (imageUrl.isNotEmpty) {
+      final uri = Uri.tryParse(imageUrl);
+      final hasValidScheme = uri?.scheme == 'http' || uri?.scheme == 'https';
+      if (uri == null || !uri.isAbsolute || !hasValidScheme || uri.host.isEmpty) {
+        Fluttertoast.showToast(msg: 'Enter a valid HTTP or HTTPS image URL');
+        return;
+      }
     }
 
     try {
@@ -167,7 +274,7 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
         sku: 'SKU-${DateTime.now().millisecondsSinceEpoch}',
         name: name,
         description: '',
-        category: 'Jewellery',
+        category: category,
         collectionName: '',
         materialType: '',
         color: '',
@@ -178,8 +285,11 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
         reservedStock: 0,
         minStockLevel: 2,
         stockQty: quantity,
-        commissionType: CommissionType.percent,
-        commissionValue: 12,
+        commissionType: _selectedCommissionType,
+        commissionValue: commissionValue,
+        imageUrl: imageUrl.isEmpty ? null : imageUrl,
+        mrp: mrp,
+        deliveryDays: deliveryDays,
         gstHsnCode: '71131900',
         gstRate: 18,
         unit: 'pc',
@@ -191,15 +301,25 @@ class _SuperAdminDashboardScreenState extends State<SuperAdminDashboardScreen> {
       final ref = _firestore.collection('products').doc();
       await ref.set(product.copyWith(id: ref.id).toFirestore());
 
+      if (!mounted) return;
       Fluttertoast.showToast(msg: 'Product added successfully!');
-      _productNameController.clear();
-      _designNumberController.clear();
-      _priceController.clear();
-      _quantityController.clear();
-      _imageUrlController.clear();
+      _clearAddProductFields();
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error: $e');
     }
+  }
+
+  void _clearAddProductFields() {
+    _productNameController.clear();
+    _designNumberController.clear();
+    _priceController.clear();
+    _quantityController.clear();
+    _imageUrlController.clear();
+    _mrpController.clear();
+    _deliveryDaysController.clear();
+    _categoryController.clear();
+    _commissionValueController.clear();
+    setState(() => _selectedCommissionType = CommissionType.percent);
   }
 
   // ---------- Partner Management ----------
