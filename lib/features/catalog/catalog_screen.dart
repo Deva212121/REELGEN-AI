@@ -561,13 +561,15 @@ class _CatalogProductCard extends StatelessWidget {
                             onPressed: !product.isInStock || isActivating
                                 ? null
                                 : onSellProduct,
-                            child: Text(
-                              !product.isInStock
-                                  ? 'Out of Stock'
-                                  : isActivating
-                                      ? 'Activating...'
-                                      : 'Sell This Product',
-                              overflow: TextOverflow.ellipsis,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                !product.isInStock
+                                    ? 'Out of Stock'
+                                    : isActivating
+                                        ? 'Activating...'
+                                        : 'Sell This Product',
+                              ),
                             ),
                           ),
                         ),
