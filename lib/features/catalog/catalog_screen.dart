@@ -35,8 +35,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
   String? _selectedCategory;
   bool _inStockOnly = false;
 
-  bool get _isInfluencerView =>
-      widget.viewMode == CatalogViewMode.influencer;
+  bool get _isInfluencerView => widget.viewMode == CatalogViewMode.influencer;
 
   @override
   void initState() {
@@ -80,8 +79,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
           final products = snapshot.data?.docs
                   .map((document) => Product.fromFirestore(document))
-                  .where((product) =>
-                      !_isInfluencerView || product.isActive)
+                  .where((product) => !_isInfluencerView || product.isActive)
                   .toList() ??
               <Product>[];
 
@@ -278,6 +276,9 @@ class _CatalogScreenState extends State<CatalogScreen> {
     final confirmed = await showProductActivationConfirmation(context, product);
     if (!confirmed || !mounted) return;
 
+    final authorized = await showProductActivationAuthorizationGuard(context);
+    if (!authorized || !mounted) return;
+
     setState(() => _activatingProductIds.add(product.id));
     try {
       await activationHandler(product);
@@ -331,8 +332,7 @@ class _CatalogProductDetailsScreenState
   bool _isActivating = false;
 
   Product get product => widget.product;
-  bool get _isInfluencerView =>
-      widget.viewMode == CatalogViewMode.influencer;
+  bool get _isInfluencerView => widget.viewMode == CatalogViewMode.influencer;
 
   @override
   Widget build(BuildContext context) {
@@ -445,6 +445,9 @@ class _CatalogProductDetailsScreenState
 
     final confirmed = await showProductActivationConfirmation(context, product);
     if (!confirmed || !mounted) return;
+
+    final authorized = await showProductActivationAuthorizationGuard(context);
+    if (!authorized || !mounted) return;
 
     setState(() => _isActivating = true);
     try {
@@ -730,6 +733,29 @@ class _CatalogMessage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool> showProductActivationAuthorizationGuard(
+    BuildContext context) async {
+  await showDialog<void>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('OTP verification required'),
+      content: const Text(
+        'Secure OTP verification is not configured yet. Product activation '
+        'has been blocked to protect your account.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+
+  // Fail closed until a verified server-side OTP authorizer is connected.
+  return false;
 }
 
 Future<bool> showProductActivationConfirmation(
