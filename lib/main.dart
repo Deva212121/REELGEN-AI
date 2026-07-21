@@ -16,6 +16,7 @@ import 'features/sub_admin_dashboard/sub_admin_dashboard_screen.dart';
 import 'features/profile/profile_screen.dart';
 import 'features/ai_script_generator/sellore_ai_screen.dart';
 import 'features/catalog/catalog_screen.dart';
+import 'features/my_products/my_products_screen.dart';
 import 'features/product_promotion_otp/otp_verification_screen.dart';
 import 'features/influencer_business_tracking/business_tracking_screen.dart';
 import 'features/reel_tracking/reel_tracking_screen.dart';
@@ -286,7 +287,7 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
             _buildHorizontalSubNav(
               currentIndex: _activeProjectsSubTab,
               onTap: (val) => setState(() => _activeProjectsSubTab = val),
-              items: ['Reels Play', 'Catalog', 'Contract OTP', 'Track Cargo'],
+              items: ['Reels Play', 'Catalog', 'My Products', 'Contract OTP', 'Track Cargo'],
             ),
             Expanded(
               child: IndexedStack(
@@ -296,6 +297,7 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
                   CatalogScreen.influencer(
                     onSellProduct: _activateCatalogProduct,
                   ),
+                  const MyProductsScreen(),
                   const OtpVerificationScreen(
                     verificationId: '',
                     email: '',
