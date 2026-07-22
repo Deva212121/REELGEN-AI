@@ -8,6 +8,7 @@ import 'models/product_model.dart';
 import 'services/firebase_service.dart';
 import 'services/influencer_product_service.dart';
 import 'features/login/login_screen.dart';
+import 'features/marketing/marketing_landing_screen.dart';
 import 'features/influencer_dashboard/influencer_dashboard_screen.dart';
 import 'features/vendor_dashboard/vendor_dashboard_screen.dart';
 import 'features/admin_dashboard/admin_dashboard_screen.dart';
@@ -71,16 +72,19 @@ class ReelGenApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginScreen(),
+      home: const MarketingLandingScreen(),
       routes: {
+        '/login': (context) => const LoginScreen(),
         '/customer-order': (context) {
-          final productId = ModalRoute.of(context)?.settings.arguments as String? ?? '';
+          final productId =
+              ModalRoute.of(context)?.settings.arguments as String? ?? '';
           return CustomerOrderScreen(productId: productId);
         },
         '/notifications': (context) => const NotificationScreen(),
         '/search': (context) => const SearchScreen(),
         '/otp-verification': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final args = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>?;
           return OtpVerificationScreen(
             verificationId: args?['verificationId'] ?? '',
             email: args?['email'] ?? '',
@@ -97,10 +101,12 @@ class UnifiedParentNavigationShell extends StatefulWidget {
   const UnifiedParentNavigationShell({super.key});
 
   @override
-  State<UnifiedParentNavigationShell> createState() => _UnifiedParentNavigationShellState();
+  State<UnifiedParentNavigationShell> createState() =>
+      _UnifiedParentNavigationShellState();
 }
 
-class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationShell> {
+class _UnifiedParentNavigationShellState
+    extends State<UnifiedParentNavigationShell> {
   int _currentIndex = 0;
   final FirebaseService _firebaseService = FirebaseService();
   final InfluencerProductService _influencerProductService =
@@ -154,14 +160,17 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                gradient: const LinearGradient(colors: [Color(0xFFD0BCFF), Color(0xFFFF4B8A)]),
+                gradient: const LinearGradient(
+                    colors: [Color(0xFFD0BCFF), Color(0xFFFF4B8A)]),
               ),
-              child: const Icon(Icons.auto_awesome, size: 16, color: Colors.white),
+              child:
+                  const Icon(Icons.auto_awesome, size: 16, color: Colors.white),
             ),
             const SizedBox(width: 8),
             const Text(
               'SelloreAI',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1),
+              style: TextStyle(
+                  fontWeight: FontWeight.w900, fontSize: 16, letterSpacing: 1),
             ),
           ],
         ),
@@ -194,7 +203,10 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
                   const SizedBox(width: 4),
                   Text(
                     currentRole,
-                    style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -229,17 +241,41 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
   List<BottomNavigationBarItem> _getBottomNavItems(String role) {
     if (role == 'INFLUENCER') {
       return const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Create'),
-        BottomNavigationBarItem(icon: Icon(Icons.movie_filter_outlined), activeIcon: Icon(Icons.movie_filter), label: 'Projects'),
-        BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'Analytics'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.video_call_outlined),
+            activeIcon: Icon(Icons.video_call),
+            label: 'Create'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.movie_filter_outlined),
+            activeIcon: Icon(Icons.movie_filter),
+            label: 'Projects'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_outlined),
+            activeIcon: Icon(Icons.bar_chart),
+            label: 'Analytics'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile'),
       ];
     }
     return const [
-      BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-      BottomNavigationBarItem(icon: Icon(Icons.bar_chart_outlined), activeIcon: Icon(Icons.bar_chart), label: 'Analytics'),
-      BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: 'Home'),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.bar_chart_outlined),
+          activeIcon: Icon(Icons.bar_chart),
+          label: 'Analytics'),
+      BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: 'Profile'),
     ];
   }
 
@@ -248,11 +284,14 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
 
     switch (_currentIndex) {
       case 0:
-        if (normalizedRole == 'INFLUENCER') return const InfluencerDashboardScreen();
+        if (normalizedRole == 'INFLUENCER')
+          return const InfluencerDashboardScreen();
         if (normalizedRole == 'VENDOR') return const VendorDashboardScreen();
         if (normalizedRole == 'ADMIN') return const AdminDashboardScreen();
-        if (normalizedRole == 'SUPER_ADMIN') return const SuperAdminDashboardScreen();
-        if (normalizedRole == 'SUB_ADMIN') return const SubAdminDashboardScreen();
+        if (normalizedRole == 'SUPER_ADMIN')
+          return const SuperAdminDashboardScreen();
+        if (normalizedRole == 'SUB_ADMIN')
+          return const SubAdminDashboardScreen();
         return const Center(child: Text('Workspace loading...'));
 
       case 1:
@@ -287,7 +326,13 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
             _buildHorizontalSubNav(
               currentIndex: _activeProjectsSubTab,
               onTap: (val) => setState(() => _activeProjectsSubTab = val),
-              items: ['Reels Play', 'Catalog', 'My Products', 'Contract OTP', 'Track Cargo'],
+              items: [
+                'Reels Play',
+                'Catalog',
+                'My Products',
+                'Contract OTP',
+                'Track Cargo'
+              ],
             ),
             Expanded(
               child: IndexedStack(
@@ -367,7 +412,9 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: isSelected ? const Color(0xFFC4FF62) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFFC4FF62)
+                        : Colors.transparent,
                     width: 2.5,
                   ),
                 ),
@@ -375,7 +422,9 @@ class _UnifiedParentNavigationShellState extends State<UnifiedParentNavigationSh
               child: Text(
                 items[index],
                 style: TextStyle(
-                  color: isSelected ? const Color(0xFFC4FF62) : const Color(0xFF938F99),
+                  color: isSelected
+                      ? const Color(0xFFC4FF62)
+                      : const Color(0xFF938F99),
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
