@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class MarketingLandingScreen extends StatelessWidget {
   const MarketingLandingScreen({super.key});
@@ -123,7 +123,7 @@ class _Hero extends StatelessWidget {
                     ? CrossAxisAlignment.center
                     : CrossAxisAlignment.start,
                 children: [
-                  const _Pill(label: 'EARLY ACCESS Ã¢â‚¬Â¢ BUILT FOR INDIA'),
+                  const _Pill(label: 'EARLY ACCESS | BUILT FOR INDIA'),
                   const SizedBox(height: 24),
                   Text(
                     'Create. Promote.\nTrack. Grow.',
