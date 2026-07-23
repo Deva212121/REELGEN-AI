@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class MarketingLandingScreen extends StatelessWidget {
@@ -51,9 +54,10 @@ class MarketingLandingScreen extends StatelessWidget {
                 children: [
                   _Hero(onStart: () => _openLogin(context)),
                   const _TrustStrip(),
+                  const _PublicCatalog(),
+                  const _HowItWorks(),
                   const _FeatureSection(),
                   const _RoleSection(),
-                  const _HowItWorks(),
                   _CtaSection(onStart: () => _openLogin(context)),
                   const _Footer(),
                 ],
@@ -581,6 +585,412 @@ class _Footer extends StatelessWidget {
               Text('Privacy & Terms coming before public release',
                   style: TextStyle(color: Color(0xFFAAA3B5))),
             ]),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------
+// Public product catalog (new section)
+// ---------------------------------------------------------------------
+
+class _PublicCatalog extends StatefulWidget {
+  const _PublicCatalog();
+
+  @override
+  State<_PublicCatalog> createState() => _PublicCatalogState();
+}
+
+class _PublicCatalogState extends State<_PublicCatalog> {
+  late final StreamSubscription<QuerySnapshot> _subscription;
+  List<QueryDocumentSnapshot> _allProducts = [];
+  List<String> _categories = ['All'];
+  String _selectedCategory = 'All';
+  String _searchQuery = '';
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = FirebaseFirestore.instance
+        .collection('products')
+        .where('isActive', isEqualTo: true)
+        .snapshots()
+        .listen((snapshot) {
+      setState(() {
+        _isLoading = false;
+        _error = null;
+        _allProducts = snapshot.docs;
+        // Update categories
+        final Set<String> catSet = {'All'};
+        for (final doc in _allProducts) {
+          final data = doc.data() as Map<String, dynamic>;
+          final cat = data['category'] as String?;
+          if (cat != null && cat.isNotEmpty) {
+            catSet.add(cat);
+          }
+        }
+        _categories = catSet.toList()..sort();
+        if (!_categories.contains(_selectedCategory)) {
+          _selectedCategory = 'All';
+        }
+      });
+    }, onError: (error) {
+      setState(() {
+        _isLoading = false;
+        _error = error.toString();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _Section(
+      title: 'Public Product Catalog',
+      subtitle: 'Browse active products from our community',
+      child: Column(
+        children: [
+          // Search and filter row
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search products...',
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: MarketingLandingScreen._surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              DropdownButton<String>(
+                value: _selectedCategory,
+                items: _categories.map((cat) {
+                  return DropdownMenuItem<String>(
+                    value: cat,
+                    child: Text(cat),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value!;
+                  });
+                },
+                dropdownColor: MarketingLandingScreen._surface,
+                style: const TextStyle(color: Colors.white),
+                underline: Container(),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Content
+          if (_isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (_error != null)
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.red.shade900.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                  const SizedBox(height: 12),
+                  Text('Error loading products: $_error'),
+                ],
+              ),
+            )
+          else if (_allProducts.isEmpty)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(24),
+                child: Text('No active products available.'),
+              ),
+            )
+          else
+            _buildProductGrid(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductGrid() {
+    // Filter products
+    final filtered = _allProducts.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      final name = (data['name'] as String? ?? '').toLowerCase();
+      final category = (data['category'] as String? ?? '');
+      final matchesSearch = name.contains(_searchQuery);
+      final matchesCategory =
+          _selectedCategory == 'All' || category == _selectedCategory;
+      return matchesSearch && matchesCategory;
+    }).toList();
+
+    if (filtered.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Text('No products match your filters.'),
+        ),
+      );
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = 1;
+        if (constraints.maxWidth >= 900)
+          crossAxisCount = 3;
+        else if (constraints.maxWidth >= 600) crossAxisCount = 2;
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 0.7,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: filtered.length,
+          itemBuilder: (context, index) {
+            final doc = filtered[index];
+            final data = doc.data() as Map<String, dynamic>;
+            return _ProductCard(data: data, docId: doc.id);
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  const _ProductCard({required this.data, required this.docId});
+  final Map<String, dynamic> data;
+  final String docId;
+
+  @override
+  Widget build(BuildContext context) {
+    final name = data['name'] as String? ?? 'Unnamed';
+    final category = data['category'] as String? ?? '';
+    final sellingPrice = (data['sellingPrice'] as num?)?.toDouble() ?? 0.0;
+    final mrp = (data['mrp'] as num?)?.toDouble() ?? 0.0;
+    final discount = mrp > 0 ? ((mrp - sellingPrice) / mrp * 100).round() : 0;
+    final stock = (data['stock'] as num?)?.toInt() ?? 0;
+    final inStock = stock > 0;
+    final deliveryTime = data['deliveryTime'] as String? ?? 'N/A';
+    final imageUrl = data['imageUrl'] as String?;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: MarketingLandingScreen._surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF352E45)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image or placeholder
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: hasImage
+                ? Image.network(
+                    imageUrl!,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _buildPlaceholder(),
+                  )
+                : _buildPlaceholder(),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            category,
+            style: const TextStyle(color: Color(0xFFAAA3B5), fontSize: 12),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Text(
+                'Ã¢â€šÂ¹${sellingPrice.toStringAsFixed(0)}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  color: MarketingLandingScreen._primary,
+                ),
+              ),
+              const SizedBox(width: 8),
+              if (mrp > 0)
+                Text(
+                  'Ã¢â€šÂ¹${mrp.toStringAsFixed(0)}',
+                  style: const TextStyle(
+                    decoration: TextDecoration.lineThrough,
+                    color: Color(0xFF938F99),
+                    fontSize: 14,
+                  ),
+                ),
+              const Spacer(),
+              if (discount > 0)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade800.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '$discount% OFF',
+                    style: const TextStyle(
+                      color: Color(0xFFC4FF62),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                inStock ? Icons.check_circle : Icons.cancel,
+                color: inStock ? Colors.green : Colors.red,
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                inStock ? 'In stock' : 'Out of stock',
+                style: TextStyle(
+                  color: inStock ? Colors.green : Colors.red,
+                  fontSize: 12,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                'Delivery: $deliveryTime',
+                style: const TextStyle(color: Color(0xFFAAA3B5), fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _showDetails(context),
+                  child: const Text('View Details'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: null, // Coming Soon
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF352E45),
+                    foregroundColor: Colors.white54,
+                  ),
+                  child: const Text('Coming Soon'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      height: 120,
+      width: double.infinity,
+      color: const Color(0xFF252033),
+      child: const Icon(Icons.image_not_supported, color: Color(0xFF938F99)),
+    );
+  }
+
+  void _showDetails(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: MarketingLandingScreen._surface,
+        title: Text(data['name'] ?? 'Product'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _detailRow('Category', data['category'] ?? ''),
+              _detailRow('Selling Price',
+                  'Ã¢â€šÂ¹${(data['sellingPrice'] as num?)?.toStringAsFixed(0) ?? '0'}'),
+              _detailRow('MRP',
+                  'Ã¢â€šÂ¹${(data['mrp'] as num?)?.toStringAsFixed(0) ?? '0'}'),
+              _detailRow('Discount',
+                  '${(data['mrp'] as num?) != null && (data['mrp'] as num) > 0 ? ((((data['mrp'] as num) - (data['sellingPrice'] as num? ?? 0)) / (data['mrp'] as num) * 100).round()) : 0}%'),
+              _detailRow(
+                  'Stock',
+                  ((data['stock'] as num?)?.toInt() ?? 0) > 0
+                      ? 'In stock'
+                      : 'Out of stock'),
+              _detailRow('Delivery Time', data['deliveryTime'] ?? 'N/A'),
+              if (data['description'] != null)
+                _detailRow('Description', data['description']),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                  color: Color(0xFFAAA3B5), fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(value, style: const TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
